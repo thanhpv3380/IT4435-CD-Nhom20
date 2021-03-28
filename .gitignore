@@ -1,0 +1,13 @@
+# Package-lock.json
+package-lock.json
+
+# Build
+build/
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# dotenv environment variables file
+.env
+.env.test
