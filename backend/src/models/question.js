@@ -7,7 +7,7 @@ const questionSchema = new mongoose.Schema(
     title: String,
     description: String,
     explainAnswer: String,
-    answer: [
+    answers: [
       {
         position: Number,
         title: String,
