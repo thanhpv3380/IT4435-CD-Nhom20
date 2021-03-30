@@ -5,6 +5,12 @@ const userSchema = new mongoose.Schema(
     name: String,
     email: String,
     password: String,
+    avatar: String,
+    dob: Date,
+    phoneNumber: String,
+    urlFacebook: String,
+    urlYoutube: String,
+    urlWebsite: String,
   },
   {
     timestamps: true,
