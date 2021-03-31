@@ -3,8 +3,8 @@ const {
 } = require('mongoose');
 const User = require('../models/user');
 
-const createUser = async ({ email, name, password }) => {
-  const user = await User.create({ email, name, password });
+const createUser = async ({ email, name, password, avatar }) => {
+  const user = await User.create({ email, name, password, avatar });
   return user;
 };
 

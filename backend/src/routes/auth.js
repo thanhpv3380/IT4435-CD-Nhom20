@@ -4,26 +4,6 @@ const { auth } = require('../middlewares/auth');
 const { loginValidate, registerValidate } = require('../validations/auth');
 const authController = require('../controllers/auth');
 
-/**
- * @swagger
- * /auths/register:
- *   post:
- *     tags:
- *       - Puppies
- *     description: Creates a new puppy
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: puppy
- *         description: Puppy object
- *         in: body
- *         required: true
- *         schema:
- *           $ref: '#/definitions/Puppy'
- *     responses:
- *       200:
- *         description: Successfully created
- */
 router.post(
   '/auths/register',
   registerValidate,
@@ -34,6 +14,16 @@ router.post(
   '/auths/login',
   loginValidate,
   asyncMiddleware(authController.login),
+);
+
+router.post(
+  '/auths/loginByGoogle',
+  asyncMiddleware(authController.loginByGoogle),
+);
+
+router.post(
+  '/auths/loginByFacebook',
+  asyncMiddleware(authController.loginByFacebook),
 );
 
 router.get(

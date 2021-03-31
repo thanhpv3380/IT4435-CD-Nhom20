@@ -23,6 +23,19 @@ const login = async (email, password) => {
   return accessToken;
 };
 
+const loginByThirdParty = async ({ email, name, picture }) => {
+  let user = await userDao.findUser({ email });
+  if (!user) {
+    user = await userDao.createUser({ email, name, avatar: picture });
+  } else {
+    await userDao.updateUser(user._id, { name, avatar: picture });
+  }
+
+  const userId = user._id;
+  const accessToken = await generateAccessToken(userId);
+  return accessToken;
+};
+
 const verifyAccessToken = async (accessToken) => {
   const data = await jwt.verify(accessToken, JWT_SECRET_KEY);
   const { userId } = data;
@@ -37,4 +50,9 @@ const register = async ({ email, name, password }) => {
   return user;
 };
 
-module.exports = { login, register, verifyAccessToken };
+module.exports = {
+  login,
+  loginByThirdParty,
+  register,
+  verifyAccessToken,
+};

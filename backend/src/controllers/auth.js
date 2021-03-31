@@ -1,7 +1,9 @@
 const { OAuth2Client } = require('google-auth-library');
+const axios = require('axios');
 const authService = require('../services/auth');
 
-const { CLIENT_ID_GOOGLE } = process.env;
+const CLIENT_ID_GOOGLE =
+  '802105279409-3f4hr8psra01jd28d9rhuupgp64658k4.apps.googleusercontent.com';
 const client = new OAuth2Client(CLIENT_ID_GOOGLE);
 
 const register = async (req, res) => {
@@ -22,18 +24,25 @@ const loginByGoogle = async (req, res) => {
     idToken: tokenId,
     audience: CLIENT_ID_GOOGLE,
   });
-  const { email_verfied, name, email } = data.getPayload;
-
-  const accessToken = await authService.login(email);
+  // eslint-disable-next-line camelcase
+  const { email_verified, email, name, picture } = data.payload;
+  const accessToken = await authService.loginByThirdParty({
+    email_verified,
+    email,
+    name,
+    picture,
+  });
   return res.send({ status: 1, result: { accessToken } });
 };
 
 const loginByFacebook = async (req, res) => {
-  const { accessToken, userID } = req.body;
-  const urlFacebok = `https://graph.facebook.com/v10.0/${userID}?fields=id,name,email,birthday&access_token=${accessToken}`;
-  const data = await fetch(urlFacebok, { method: 'GET' });
-  const { name, email } = data;
-  const token = await authService.login(email);
+  const { accessToken, userId } = req.body;
+  console.log({ accessToken, userId });
+  const urlFacebook = `https://graph.facebook.com/v2.11/${userId}?fields=id,name,email,picture&access_token=${accessToken}`;
+  const data = await axios.get(urlFacebook);
+  const { email, name } = data.data;
+
+  const token = await authService.loginByThirdParty({ email, name });
   return res.send({ status: 1, result: { accessToken: token } });
 };
 
