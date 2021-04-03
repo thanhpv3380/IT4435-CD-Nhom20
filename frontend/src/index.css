@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'Vbee';
-  src: local('Vbee'), url(./fonts/Vbee.woff) format('woff');
+  font-family: 'font_1';
+  src: local('font_1'), url(./fonts/font_1.woff) format('woff');
 }
 
 body {

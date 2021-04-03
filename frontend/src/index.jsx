@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import './index.css';
+import { SnackbarProvider } from 'notistack';
 import * as serviceWorker from './serviceWorker';
 import './languages';
 import Router from './router';
@@ -10,7 +11,9 @@ import store from './redux/store';
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store()}>
-      <Router />
+      <SnackbarProvider>
+        <Router />
+      </SnackbarProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root'),

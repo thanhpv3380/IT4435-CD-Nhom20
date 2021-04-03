@@ -3,6 +3,11 @@ import { actionTypes } from './actions';
 export const initialState = {
   accessToken: null,
   isLoggingIn: false,
+  verifying: false,
+  loginCode: null,
+  status: null,
+  message: null,
+  user: null,
 };
 
 export default function authReducer(state = initialState, action) {
@@ -11,13 +16,46 @@ export default function authReducer(state = initialState, action) {
       return { ...state, isLoggingIn: true };
 
     case actionTypes.LOGIN_SUCCESS: {
-      const { accessToken } = action;
-      return { ...state, isLoggingIn: false, accessToken };
+      const { accessToken, user } = action;
+      return {
+        ...state,
+        isLoggingIn: false,
+        status: 1,
+        accessToken,
+        user,
+      };
     }
 
     case actionTypes.LOGIN_FAILURE: {
-      return { ...state, isLoggingIn: false };
+      const { code, message } = action;
+      return {
+        ...state,
+        loginCode: code,
+        message,
+        status: 0,
+        isLoggingIn: false,
+      };
     }
+
+    case actionTypes.VERIFY_TOKEN:
+      return { ...state, verifying: true };
+
+    case actionTypes.VERIFY_TOKEN_SUCCESS: {
+      const { accessToken, user } = action;
+      return {
+        ...state,
+        verifying: false,
+        accessToken,
+        user,
+        status: 1,
+      };
+    }
+
+    case actionTypes.VERIFY_TOKEN_FAILURE:
+      return { ...state, verifying: false, status: 0 };
+
+    case actionTypes.LOGOUT:
+      return { ...state, status: 0, accessToken: null };
 
     default:
       return state;

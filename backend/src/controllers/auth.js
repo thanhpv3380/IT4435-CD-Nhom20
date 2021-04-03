@@ -14,8 +14,9 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  const accessToken = await authService.login(email, password);
-  return res.send({ status: 1, result: { accessToken } });
+
+  const { accessToken, user } = await authService.login(email, password);
+  return res.send({ status: 1, result: { accessToken, user } });
 };
 
 const loginByGoogle = async (req, res) => {
@@ -26,24 +27,26 @@ const loginByGoogle = async (req, res) => {
   });
   // eslint-disable-next-line camelcase
   const { email_verified, email, name, picture } = data.payload;
-  const accessToken = await authService.loginByThirdParty({
+  const { accessToken, user } = await authService.loginByThirdParty({
     email_verified,
     email,
     name,
     picture,
   });
-  return res.send({ status: 1, result: { accessToken } });
+  return res.send({ status: 1, result: { accessToken, user } });
 };
 
 const loginByFacebook = async (req, res) => {
   const { accessToken, userId } = req.body;
-  console.log({ accessToken, userId });
   const urlFacebook = `https://graph.facebook.com/v2.11/${userId}?fields=id,name,email,picture&access_token=${accessToken}`;
   const data = await axios.get(urlFacebook);
   const { email, name } = data.data;
 
-  const token = await authService.loginByThirdParty({ email, name });
-  return res.send({ status: 1, result: { accessToken: token } });
+  const { accessToken: token, user } = await authService.loginByThirdParty({
+    email,
+    name,
+  });
+  return res.send({ status: 1, result: { accessToken: token, user } });
 };
 
 const verifyAccessToken = async (req, res) => {

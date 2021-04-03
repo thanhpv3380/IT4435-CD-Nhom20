@@ -26,3 +26,21 @@ export async function loginByFacebook({ accessToken, userID }) {
   });
   return loginInfo;
 }
+
+export async function register({ name, email, password }) {
+  const data = await api({
+    method: 'POST',
+    url: '/auths/register',
+    data: { name, email, password },
+  });
+  return data;
+}
+
+export async function verify(accessToken) {
+  const data = await api({
+    method: 'GET',
+    url: '/auths/verify',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  return data;
+}
