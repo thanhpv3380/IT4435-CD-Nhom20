@@ -6,6 +6,8 @@ const getErrorMessage = (code) => {
       return 'User is not found';
     case codes.WRONG_PASSWORD:
       return 'Wrong password';
+    case codes.EMAIL_EXIST:
+      return 'Email existed';
     default:
       return null;
   }
