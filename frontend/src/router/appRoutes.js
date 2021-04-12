@@ -1,7 +1,9 @@
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 import Home from '../pages/Home';
-
+import User from '../pages/User';
+import Contest from '../pages/Contest';
+import GroupQuestion from '../pages/GroupQuestion';
 import routes from '../constants/route';
 
 export default [
@@ -22,6 +24,27 @@ export default [
   {
     path: routes.HOME,
     component: Home,
+    exact: true,
+    restricted: false,
+    isPrivate: true,
+  },
+  {
+    path: routes.USER,
+    component: User,
+    exact: true,
+    restricted: false,
+    isPrivate: true,
+  },
+  {
+    path: routes.CONTEST,
+    component: Contest,
+    exact: true,
+    restricted: false,
+    isPrivate: true,
+  },
+  {
+    path: routes.GROUP_QUESTIONS,
+    component: GroupQuestion,
     exact: true,
     restricted: false,
     isPrivate: true,

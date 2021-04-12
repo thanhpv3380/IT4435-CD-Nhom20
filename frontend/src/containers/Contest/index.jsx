@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 function App() {
   const { t } = useTranslation();
-  return <div>Home1</div>;
+  return <div>Contest</div>;
 }
 
 export default App;
