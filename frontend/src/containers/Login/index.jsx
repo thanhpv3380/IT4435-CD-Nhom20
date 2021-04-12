@@ -14,7 +14,6 @@ import {
   Link,
   Grid,
   Typography,
-  Divider,
   Box,
 } from '@material-ui/core';
 import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons';

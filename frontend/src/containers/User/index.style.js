@@ -6,10 +6,10 @@ export default makeStyles((theme) => ({
   },
   paper: {
     marginBottom: theme.spacing(3),
-    padding: theme.spacing(2),
+    padding: theme.spacing(6),
     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
       marginBottom: theme.spacing(6),
-      padding: theme.spacing(3),
+      padding: theme.spacing(10),
     },
   },
   stepper: {

@@ -22,37 +22,25 @@ const Register = () => {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [name, setName] = useState({
-    firstName: '',
-    lastName: '',
-  });
-
-  const [nameError, setNameError] = useState({
-    firstName: '',
-    lastName: '',
-  });
-
   const [user, setUser] = useState({
+    name: '',
     email: '',
     password: '',
   });
 
   const [userError, setUserError] = useState({
+    name: '',
     email: '',
     password: '',
   });
 
   const validateRegister = () => {
     let countError = 0;
-    if (name.firstName.length === 0) {
-      setNameError((prev) => ({
+    if (user.name.length === 0) {
+      setUserError((prev) => ({
         ...prev,
-        firstName: 'First Name is required',
+        name: 'Name is required',
       }));
-      countError++;
-    }
-    if (name.lastName.length === 0) {
-      setNameError((prev) => ({ ...prev, lastName: 'Last Name is required' }));
       countError++;
     }
 
@@ -61,7 +49,6 @@ const Register = () => {
       countError++;
     } else if (!validateEmail(user.email)) {
       setUserError((prev) => ({ ...prev, email: 'Email invalid' }));
-
       countError++;
     }
 
@@ -76,10 +63,7 @@ const Register = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     if (!validateRegister()) return;
-    const data = await apis.auth.register({
-      ...user,
-      name: `${name.firstName} ${name.lastName}`,
-    });
+    const data = await apis.auth.register({ ...user });
     if (data && data.status) {
       enqueueSnackbar('Register success', { variant: 'success' });
       history.push('/login');
@@ -101,45 +85,23 @@ const Register = () => {
             Sign up
           </Typography>
           <form className={classes.form} noValidate>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="fname"
-                  name="firstName"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  value={name.firstName}
-                  onChange={(e) => {
-                    setNameError({ ...userError, firstName: '' });
-                    setName({ ...name, firstName: e.target.value });
-                  }}
-                  error={nameError.firstName}
-                  helperText={nameError.firstName}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="lname"
-                  value={name.lastName}
-                  onChange={(e) => {
-                    setNameError({ ...userError, lastName: '' });
-                    setName({ ...name, lastName: e.target.value });
-                  }}
-                  error={nameError.lastName}
-                  helperText={nameError.lastName}
-                />
-              </Grid>
-            </Grid>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              id="name"
+              label="Name"
+              name="name"
+              autoComplete="name"
+              value={user.name}
+              onChange={(e) => {
+                setUserError({ ...userError, name: '' });
+                setUser({ ...user, name: e.target.value });
+              }}
+              error={userError.name}
+              helperText={userError.name}
+            />
+
             <TextField
               variant="outlined"
               margin="normal"

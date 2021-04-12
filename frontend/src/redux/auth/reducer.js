@@ -57,6 +57,11 @@ export default function authReducer(state = initialState, action) {
     case actionTypes.LOGOUT:
       return { ...state, status: 0, accessToken: null };
 
+    case actionTypes.UPDATE_USER: {
+      const { user } = action;
+      return { ...state, user };
+    }
+
     default:
       return state;
   }

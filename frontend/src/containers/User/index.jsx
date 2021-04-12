@@ -1,39 +1,83 @@
-import React from 'react';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from 'notistack';
 import {
   TextField,
   Grid,
   Typography,
   Box,
-  CssBaseline,
-  AppBar,
-  Toolbar,
   Paper,
   Button,
   IconButton,
 } from '@material-ui/core';
-
 import { PhotoCamera as PhotoCameraIcon } from '@material-ui/icons';
+import { useSelector, useDispatch } from 'react-redux';
+import actions from '../../redux/actions';
 import useStyles from './index.style';
+import apis from '../../apis';
 
 const User = () => {
   const { t } = useTranslation();
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+  const [userInfo, setUserInfo] = useState(
+    useSelector((state) => state.auth.user),
+  );
+
+  const handleChange = (e) => {
+    setUserInfo({
+      ...userInfo,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    const {
+      name,
+      avatar,
+      dob,
+      phoneNumber,
+      urlFacebook,
+      urlYoutube,
+      urlWebsite,
+    } = userInfo;
+    if (name.trim().length <= 0) {
+      enqueueSnackbar("Name doesn't empty", { variant: 'error' });
+      return;
+    }
+    const data = await apis.user.updateUser({
+      name,
+      avatar,
+      dob,
+      phoneNumber,
+      urlFacebook,
+      urlYoutube,
+      urlWebsite,
+    });
+    if (data && data.status) {
+      dispatch(
+        actions.auth.updateUser({
+          ...data.result.user,
+        }),
+      );
+      enqueueSnackbar('Update success', { variant: 'success' });
+    } else {
+      enqueueSnackbar('Update failed', { variant: 'error' });
+    }
+  };
 
   return (
     <div className={classes.root}>
-      <Box textAlign="center" mb={2}>
-        <Typography variant="h4" component="h2" text>
-          User Information
-        </Typography>
-      </Box>
-
       <Grid container spacing={3}>
         <Grid item xs={3} sm={3}>
           <img
-            src="https://i.pinimg.com/474x/d4/4d/64/d44d6476e69b74f45b1de228bdd3e754.jpg"
+            src={(userInfo && userInfo.avatar) || ''}
             width="100%"
             height="250px"
+            alt="avatar"
           />
           <input
             accept="image/*"
@@ -52,69 +96,95 @@ const User = () => {
           </label>
         </Grid>
         <Grid item xs={9} sm={9}>
-          <Paper className={classes.paper} fullWidth>
+          <Paper className={classes.paper} variant={3}>
+            <Box textAlign="center" mb={3}>
+              <Typography variant="h4" component="h2">
+                User Information
+              </Typography>
+            </Box>
             <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   required
-                  id="firstName"
-                  name="firstName"
-                  label="First name"
+                  id="name"
+                  name="name"
+                  label="Name"
                   variant="outlined"
                   fullWidth
-                  autoComplete="given-name"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  id="lastName"
-                  name="lastName"
-                  label="Last name"
-                  variant="outlined"
-                  fullWidth
-                  autoComplete="family-name"
+                  value={(userInfo && userInfo.name) || ''}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
-                  id="address1"
-                  name="address1"
-                  label="Address line 1"
+                  name="email"
+                  label="Email"
                   variant="outlined"
                   fullWidth
-                  autoComplete="shipping address-line1"
+                  disabled
+                  value={(userInfo && userInfo.email) || ''}
+                  onChange={handleChange}
+                />
+              </Grid>
+              {/* <Grid item xs={12}>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="MM/dd/yyyy"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Date picker inline"
+                    value={(userInfo && userInfo.dob) || new Date()}
+                    onChange={(value) =>
+                      setUserInfo({ ...userInfo, dob: value })
+                    }
+                    KeyboardButtonProps={{
+                      'aria-label': 'change date',
+                    }}
+                  />
+                </MuiPickersUtilsProvider>
+              </Grid> */}
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  name="phoneNumber"
+                  label="Phone Number"
+                  variant="outlined"
+                  fullWidth
+                  value={(userInfo && userInfo.phoneNumber) || ''}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  id="address2"
-                  name="address2"
-                  label="Address line 2"
+                  name="urlFacebook"
+                  label="Link Facebook"
                   variant="outlined"
                   fullWidth
-                  autoComplete="shipping address-line2"
+                  value={(userInfo && userInfo.urlFacebook) || ''}
+                  onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
-                  required
-                  id="city"
-                  name="city"
-                  label="City"
+                  name="urlYoutube"
+                  label="Link Youtube"
                   variant="outlined"
                   fullWidth
-                  autoComplete="shipping address-level2"
+                  value={(userInfo && userInfo.urlYoutube) || ''}
+                  onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
-                  id="state"
-                  name="state"
-                  label="State/Province/Region"
+                  name="urlWebsite"
+                  label="Link Website"
                   variant="outlined"
                   fullWidth
+                  value={(userInfo && userInfo.urlWebsite) || ''}
+                  onChange={handleChange}
                 />
               </Grid>
             </Grid>
@@ -123,6 +193,8 @@ const User = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
+                size="large"
+                onClick={handleSave}
               >
                 Save
               </Button>
