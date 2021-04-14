@@ -26,3 +26,11 @@ export async function updateGroupQuestions(id, data) {
   });
   return res;
 }
+
+export async function deleteGroupQuestions(id) {
+  const res = await api({
+    method: 'DELETE',
+    url: `/groupQuestions/${id}`,
+  });
+  return res;
+}

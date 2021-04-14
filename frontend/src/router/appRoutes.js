@@ -4,6 +4,7 @@ import Home from '../pages/Home';
 import User from '../pages/User';
 import Contest from '../pages/Contest';
 import GroupQuestion from '../pages/GroupQuestion';
+import Question from '../pages/Question';
 import routes from '../constants/route';
 
 export default [
@@ -45,6 +46,13 @@ export default [
   {
     path: routes.GROUP_QUESTIONS,
     component: GroupQuestion,
+    exact: true,
+    restricted: false,
+    isPrivate: true,
+  },
+  {
+    path: routes.QUESTION,
+    component: Question,
     exact: true,
     restricted: false,
     isPrivate: true,

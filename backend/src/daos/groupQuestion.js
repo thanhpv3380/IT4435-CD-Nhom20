@@ -42,13 +42,13 @@ const createGroupQuestion = async ({
   title,
   description,
   imageUrl,
-  createBy,
+  createdBy,
 }) => {
   const groupQuestion = await GroupQuestion.create({
     title,
     description,
     imageUrl,
-    createBy,
+    createdBy,
   });
   return groupQuestion;
 };

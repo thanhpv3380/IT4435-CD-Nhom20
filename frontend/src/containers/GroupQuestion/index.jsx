@@ -1,12 +1,11 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import {
   Button,
   Box,
-  TextField,
-  InputAdornment,
   List,
   ListItem,
   ListItemAvatar,
@@ -14,13 +13,12 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
-  Typography,
   Menu,
   MenuItem,
+  Typography,
 } from '@material-ui/core';
 import {
   Add as AddIcon,
-  Search as SearchIcon,
   Image as ImageIcon,
   MoreVert as MoreVertIcon,
 } from '@material-ui/icons';
@@ -34,6 +32,7 @@ const GroupQuestion = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [keySearch, setKeySearch] = useState('');
@@ -41,28 +40,14 @@ const GroupQuestion = () => {
   const [groupQuestions, setGroupQuestions] = useState([]);
 
   const fetchGroupQuestions = async (keyword) => {
-    console.log(keyword);
-    const data = [
-      {
-        id: '1',
-        title: 'Bộ câu hỏi Toán cao cấp 20202',
-        description: 'Đề bao gồm nhiều câu của đề thi các năm 2017, 2018, 2019',
-        imageUrl: '',
-      },
-      {
-        id: '2',
-        title: 'Bộ câu hỏi Lý',
-        description: 'Đề bao gồm nhiều câu hỏi khó',
-        imageUrl: '',
-      },
-    ];
-    setGroupQuestions(data);
-    // const data = await apis.groupQuestion.getGroupQuestions(keyword);
-    // if (data && data.status) {
-    //   setGroupQuestions(data.result.groupQuestions);
-    // } else {
-    //   enqueueSnackbar('Fetch data failed', { variant: 'error' });
-    // }
+    const data = await apis.groupQuestion.getGroupQuestions(keyword);
+    if (data && data.status) {
+      setGroupQuestions(data.result.data);
+    } else {
+      enqueueSnackbar((data && data.message) || 'Fetch data failed', {
+        variant: 'error',
+      });
+    }
   };
 
   useEffect(() => {
@@ -82,9 +67,24 @@ const GroupQuestion = () => {
     setAnchorEl(null);
     setOpenModal(true);
   };
-  const handleDelete = () => {
+
+  const handleDelete = async () => {
     setAnchorEl(null);
-    console.log('delete ', groupQuestionSelected.id);
+    try {
+      await apis.groupQuestion.deleteGroupQuestions(groupQuestionSelected.id);
+      const newGroupQuestions = [...groupQuestions];
+      const tempGroupQuestions = newGroupQuestions.filter(
+        (ele) => ele.id !== groupQuestionSelected.id,
+      );
+      setGroupQuestions(tempGroupQuestions);
+      enqueueSnackbar('Delete success', {
+        variant: 'success',
+      });
+    } catch (error) {
+      enqueueSnackbar('Delete data failed', {
+        variant: 'error',
+      });
+    }
   };
 
   const handleOpenModalAdd = (e) => {
@@ -103,11 +103,11 @@ const GroupQuestion = () => {
     clearTimeout(timeOutId);
     timeOutId = setTimeout(() => {
       fetchGroupQuestions(value);
-    }, 500);
+    }, 100);
   };
   const handleSave = (el) => async (e) => {
     e.preventDefault();
-    setOpenModal(false);
+
     if (el.id) {
       const { title, description, imageUrl } = el;
       const data = await apis.groupQuestion.updateGroupQuestions(el.id, {
@@ -116,30 +116,44 @@ const GroupQuestion = () => {
         imageUrl,
       });
       if (data && data.status) {
+        setOpenModal(false);
         const newGroupQuestions = [...groupQuestions];
         const pos = newGroupQuestions.findIndex((ele) => ele.id === el.id);
         newGroupQuestions[pos] = { ...data.result.groupQuestion };
         setGroupQuestions(newGroupQuestions);
         enqueueSnackbar('Update success', { variant: 'success' });
       } else {
-        enqueueSnackbar('Update failed', { variant: 'error' });
+        enqueueSnackbar((data && data.message) || 'Update failed', {
+          variant: 'error',
+        });
       }
     } else {
       const { title, description, imageUrl } = el;
+      if (title.trim().length <= 0) {
+        enqueueSnackbar("Title doesn't empty ", { variant: 'error' });
+        return;
+      }
       const data = await apis.groupQuestion.createGroupQuestion({
         title,
         description,
         imageUrl,
       });
       if (data && data.status) {
+        setOpenModal(false);
         const newGroupQuestions = [...groupQuestions];
         newGroupQuestions.push({ ...data.result.groupQuestion });
         setGroupQuestions(newGroupQuestions);
         enqueueSnackbar('Create success', { variant: 'success' });
       } else {
-        enqueueSnackbar('Create failed', { variant: 'error' });
+        enqueueSnackbar((data && data.message) || 'Create failed', {
+          variant: 'error',
+        });
       }
     }
+  };
+
+  const handleClickItem = (id) => () => {
+    history.push(`/groupQuestions/${id}/questions`);
   };
 
   return (
@@ -166,22 +180,31 @@ const GroupQuestion = () => {
           </Button>
         </Box>
       </Box>
-      <List>
-        {groupQuestions.map((el) => (
-          <ListItem className={classes.listItem} key={el.id}>
-            <ListItemAvatar>
-              <Avatar>
-                <ImageIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              classes={{
-                primary: classes.textPrimary,
-              }}
-              primary={el.title}
-              secondary={el.description}
-            />
-            {/* <ListItemText>
+      {groupQuestions.length === 0 ? (
+        <Typography variant="subtitle1" gutterBottom align="center">
+          List Group Question Empty
+        </Typography>
+      ) : (
+        <List>
+          {groupQuestions.map((el) => (
+            <ListItem
+              className={classes.listItem}
+              key={el.id}
+              onClick={handleClickItem(el.id)}
+            >
+              <ListItemAvatar>
+                <Avatar>
+                  <ImageIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                classes={{
+                  primary: classes.textPrimary,
+                }}
+                primary={el.title}
+                secondary={el.description}
+              />
+              {/* <ListItemText>
               <Box display="flex" alignItems="flex-end">
                 <Box mr={1}>
                   <Typography variant="button" component="h2">
@@ -193,16 +216,17 @@ const GroupQuestion = () => {
                 </Typography>
               </Box>
             </ListItemText> */}
-            <ListItemSecondaryAction>
-              <div onClick={handleOpenToggle(el)}>
-                <IconButton edge="end" aria-label="more">
-                  <MoreVertIcon />
-                </IconButton>
-              </div>
-            </ListItemSecondaryAction>
-          </ListItem>
-        ))}
-      </List>
+              <ListItemSecondaryAction>
+                <div onClick={handleOpenToggle(el)}>
+                  <IconButton edge="end" aria-label="more">
+                    <MoreVertIcon />
+                  </IconButton>
+                </div>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
+      )}
       <Menu
         classes={{
           paper: classes.menusToggle,

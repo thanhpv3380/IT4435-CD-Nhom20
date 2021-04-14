@@ -65,12 +65,12 @@ const updateGroupQuestion = async (id, data, userId) => {
   const groupQuestionExist = await groupQuestionDao.findGroupQuestion({
     title,
     createdBy: userId,
+    _id: { $ne: id },
   });
 
   if (groupQuestionExist) {
     throw new CustomError(errorCodes.ITEM_EXIST);
   }
-
   const groupQuestion = await groupQuestionDao.updateGroupQuestion(id, data);
   return groupQuestion;
 };
