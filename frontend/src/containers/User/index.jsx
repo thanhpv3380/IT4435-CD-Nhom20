@@ -72,38 +72,40 @@ const User = () => {
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
-        <Grid item xs={3} sm={3}>
-          <img
-            src={(userInfo && userInfo.avatar) || ''}
-            width="100%"
-            height="250px"
-            alt="avatar"
-          />
-          <input
-            accept="image/*"
-            className={classes.input}
-            id="icon-button-file"
-            type="file"
-          />
-          <label htmlFor="icon-button-file">
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-            >
-              <PhotoCameraIcon />
-            </IconButton>
-          </label>
+        <Grid item xs={12} sm={3}>
+          <Box borderRadius="50%" className={classes.avatar}>
+            <img
+              src={(userInfo && userInfo.avatar) || ''}
+              width="100%"
+              height="auto"
+              alt="avatar"
+            />
+            <input
+              accept="image/*"
+              className={classes.input}
+              id="icon-button-file"
+              type="file"
+            />
+            <label className={classes.btnCamera} htmlFor="icon-button-file">
+              <IconButton
+                color="primary"
+                aria-label="upload picture"
+                component="span"
+              >
+                <PhotoCameraIcon fontSize="large" />
+              </IconButton>
+            </label>
+          </Box>
         </Grid>
-        <Grid item xs={9} sm={9}>
+        <Grid item xs={12} sm={9}>
           <Paper className={classes.paper} variant={3}>
             <Box textAlign="center" mb={3}>
               <Typography variant="h4" component="h2">
-                User Information
+                Profile
               </Typography>
             </Box>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   required
                   id="name"
@@ -115,7 +117,7 @@ const User = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   required
                   name="email"
@@ -146,7 +148,7 @@ const User = () => {
                   />
                 </MuiPickersUtilsProvider>
               </Grid> */}
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   required
                   name="phoneNumber"
@@ -157,7 +159,7 @@ const User = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   name="urlFacebook"
                   label="Link Facebook"
@@ -167,7 +169,7 @@ const User = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   name="urlYoutube"
                   label="Link Youtube"
@@ -177,7 +179,7 @@ const User = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   name="urlWebsite"
                   label="Link Website"

@@ -15,7 +15,7 @@
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/pickers": "^3.2.10",
     "@material-ui/styles": "^4.11.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "camelcase-keys": "^6.2.2",
     "clsx": "^1.1.1",
     "cross-env": "^7.0.2",
