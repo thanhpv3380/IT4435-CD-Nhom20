@@ -13,7 +13,7 @@ import {
   Radio,
   Divider,
   AccordionActions,
-  Checkbox,
+  TextField,
 } from '@material-ui/core';
 import {
   Add as AddIcon,
@@ -21,6 +21,7 @@ import {
   Delete as DeleteIcon,
 } from '@material-ui/icons';
 import SearchBox from '../../components/SearchBox';
+import QuestionModal from './QuestionModal';
 import useStyles from './index.style';
 
 let timeOutId = null;
@@ -28,7 +29,7 @@ const Question = () => {
   const { t } = useTranslation();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-
+  const [openModal, setOpenModal] = useState(false);
   const [keySearch, setKeySearch] = useState('');
 
   const handleSearch = (e) => {
@@ -43,6 +44,15 @@ const Question = () => {
   const handleDeleteQuestion = (e) => {
     e.stopPropagation();
     console.log('fdsfsd');
+  };
+
+  const handleOpenModalAdd = (e) => {
+    e.preventDefault();
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -75,6 +85,7 @@ const Question = () => {
               size="large"
               className={classes.button}
               startIcon={<AddIcon />}
+              onClick={handleOpenModalAdd}
             >
               Add Question
             </Button>
@@ -99,30 +110,45 @@ const Question = () => {
               </Typography>
             </Box>
           </AccordionSummary>
-          <AccordionDetails>
-            <Box>
-              <RadioGroup aria-label="gender" name="gender1">
-                <FormControlLabel
-                  label="A. female"
-                  control={<Radio />}
-                  value="Female"
+          <AccordionDetails className={classes.detail}>
+            <Box display="flex" flexDirection="column">
+              <Box>
+                <TextField fullWidth label="Title" variant="outlined" />
+              </Box>
+              <Box>
+                <TextField
+                  fullWidth
+                  label="Description"
+                  variant="outlined"
+                  multiline
                 />
-                <FormControlLabel
-                  label="B. male"
-                  control={<Radio />}
-                  value="Male"
-                />
-                <FormControlLabel
-                  label="C. other"
-                  control={<Radio />}
-                  value="Other"
-                />
-                <FormControlLabel
-                  label="D. other"
-                  control={<Radio />}
-                  value="Other"
-                />
-              </RadioGroup>
+              </Box>
+
+              <Box>
+                <RadioGroup aria-label="gender" name="gender1">
+                  <FormControlLabel
+                    label="A. female"
+                    control={<Radio />}
+                    value="Female"
+                  />
+                  <FormControlLabel
+                    label="B. male"
+                    control={<Radio />}
+                    value="Male"
+                  />
+                  <FormControlLabel
+                    label="C. other"
+                    control={<Radio />}
+                    value="Other"
+                  />
+                  <FormControlLabel
+                    label="D. other"
+                    control={<Radio />}
+                    value="Other"
+                  />
+                </RadioGroup>
+              </Box>
+              <TextField label="Explain Answer" variant="outlined" multiline />
             </Box>
           </AccordionDetails>
           <Divider />
@@ -134,6 +160,7 @@ const Question = () => {
           </AccordionActions>
         </Accordion>
       </Box>
+      <QuestionModal open={openModal} handleCloseModal={handleCloseModal} />
     </div>
   );
 };

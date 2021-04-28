@@ -17,4 +17,7 @@ export default makeStyles((theme) => ({
   heading: {
     fontSize: theme.spacing(2.5),
   },
+  detail: {
+    width: '100%',
+  },
 }));

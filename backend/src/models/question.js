@@ -4,18 +4,17 @@ const { ObjectId } = mongoose.Types;
 
 const questionSchema = new mongoose.Schema(
   {
+    level: String, // EASY, MEDIUM, HARD
     title: String,
     description: String,
-    explainAnswer: String,
+    explain: String,
     answers: [
       {
         position: Number,
-        title: String,
-        description: String,
+        content: String,
+        isCorrect: Boolean,
       },
     ],
-    correctAnswer: Number,
-    level: String, // EASY, MEDIUM, HARD
     groupQuestion: {
       type: ObjectId,
       ref: 'Group Question',
