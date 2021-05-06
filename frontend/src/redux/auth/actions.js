@@ -6,6 +6,7 @@ export const actionTypes = {
   VERIFY_TOKEN_SUCCESS: 'VERIFY_TOKEN_SUCCESS',
   VERIFY_TOKEN_FAILURE: 'VERIFY_TOKEN_FAILURE',
   LOGOUT: 'LOGOUT',
+  UPDATE_USER: 'UPDATE_USER',
 };
 
 export function login(loginType, data) {
@@ -56,5 +57,12 @@ export function verifyTokenFailure() {
 export function logout() {
   return {
     type: actionTypes.LOGOUT,
+  };
+}
+
+export function updateUser(user) {
+  return {
+    type: actionTypes.UPDATE_USER,
+    user,
   };
 }
