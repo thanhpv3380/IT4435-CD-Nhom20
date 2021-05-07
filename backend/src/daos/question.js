@@ -36,18 +36,16 @@ const findQuestion = async (condition, fields, populate) => {
 const createQuestion = async ({
   title,
   description,
-  explainAnswer,
+  explain,
   answers = [],
-  correctAnswer = 0,
   level,
   groupQuestion,
 }) => {
   const question = await Question.create({
     title,
     description,
-    explainAnswer,
+    explain,
     answers,
-    correctAnswer,
     level,
     groupQuestion,
   });

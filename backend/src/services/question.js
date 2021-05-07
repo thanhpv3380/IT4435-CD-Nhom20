@@ -1,6 +1,5 @@
 const CustomError = require('../errors/CustomError');
 const errorCodes = require('../errors/code');
-
 const questionDao = require('../daos/question');
 
 const findAllQuestionByGroupQuestion = async ({
@@ -10,14 +9,18 @@ const findAllQuestionByGroupQuestion = async ({
   offset,
   sort,
   query,
+  fields,
 }) => {
+  const newSort = sort && sort.split(',');
+  const newFields = fields && fields.split(',');
   const { data, metadata } = await questionDao.findAllQuestion({
     key,
     searchFields: ['title', 'description'],
     query: { ...query, groupQuestion: groupQuestionId },
     offset,
     limit,
-    sort,
+    sort: newSort,
+    fields: newFields,
   });
 
   return { data, metadata };
@@ -36,18 +39,16 @@ const findQuestionById = async (id) => {
 const createQuestion = async ({
   title,
   description,
-  explainAnswer,
+  explain,
   answers,
-  correctAnswer,
   level,
   groupQuestion,
 }) => {
   const question = await questionDao.createQuestion({
     title,
     description,
-    explainAnswer,
+    explain,
     answers,
-    correctAnswer,
     level,
     groupQuestion,
   });
