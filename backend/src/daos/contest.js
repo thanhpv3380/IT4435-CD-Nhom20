@@ -66,6 +66,7 @@ const createContest = async ({
 };
 
 const updateContest = async (id, data) => {
+  console.log(data);
   const contest = await Contest.findByIdAndUpdate(id, data, {
     new: true,
   });

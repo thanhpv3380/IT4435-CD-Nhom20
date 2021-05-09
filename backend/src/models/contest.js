@@ -19,8 +19,7 @@ const contestSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'Group Question',
     },
-    isPublic: Boolean,
-    code: String,
+    isActive: Boolean,
     password: String,
   },
   {

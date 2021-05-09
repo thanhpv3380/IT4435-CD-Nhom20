@@ -83,4 +83,10 @@ export default makeStyles((theme) => ({
     textDecoration: 'none',
     color: '#000',
   },
+  avatar: {
+    marginLeft: theme.spacing(1),
+  },
+  listItem: {
+    background: '#eee',
+  },
 }));

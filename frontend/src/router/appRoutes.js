@@ -5,6 +5,7 @@ import User from '../pages/User';
 import Contest from '../pages/Contest';
 import GroupQuestion from '../pages/GroupQuestion';
 import Question from '../pages/Question';
+import ChangePassword from '../pages/ChangePassword';
 import routes from '../constants/route';
 
 export default [
@@ -53,6 +54,13 @@ export default [
   {
     path: routes.QUESTION,
     component: Question,
+    exact: true,
+    restricted: false,
+    isPrivate: true,
+  },
+  {
+    path: routes.CHANGE_PASSWORD,
+    component: ChangePassword,
     exact: true,
     restricted: false,
     isPrivate: true,

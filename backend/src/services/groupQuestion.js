@@ -3,22 +3,11 @@ const errorCodes = require('../errors/code');
 
 const groupQuestionDao = require('../daos/groupQuestion');
 
-const findAllGroupQuestionByUser = async ({
-  userId,
-  key,
-  limit,
-  offset,
-  sort,
-  query,
-}) => {
+const findAllGroupQuestionByUser = async ({ userId, key }) => {
   const { data, metadata } = await groupQuestionDao.findAllGroupQuestionByUser({
     key,
-    searchFields: ['title', 'description'],
-    query: { ...query, createdBy: userId },
-    offset,
-    limit,
-    sort,
-    populate: ['createdBy'],
+    searchFields: ['title'],
+    query: { createdBy: userId },
   });
 
   return { data, metadata };

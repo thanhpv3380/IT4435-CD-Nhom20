@@ -55,7 +55,7 @@ export default function authReducer(state = initialState, action) {
       return { ...state, verifying: false, status: 0 };
 
     case actionTypes.LOGOUT:
-      return { ...state, status: 0, accessToken: null };
+      return { ...state, status: 0, accessToken: null, user: null };
 
     case actionTypes.UPDATE_USER: {
       const { user } = action;

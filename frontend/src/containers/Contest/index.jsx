@@ -1,9 +1,285 @@
-import React from 'react';
+/* eslint-disable radix */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable no-nested-ternary */
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from 'notistack';
+import { withStyles } from '@material-ui/core/styles';
+import { green } from '@material-ui/core/colors';
+import moment from 'moment';
+import {
+  Button,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableContainer,
+  Paper,
+  IconButton,
+  TablePagination,
+  FormControlLabel,
+  Checkbox,
+} from '@material-ui/core';
+import {
+  Add as AddIcon,
+  Delete as DeleteIcon,
+  Lock as LockIcon,
+} from '@material-ui/icons';
+import SearchBox from '../../components/SearchBox';
+import ContestModal from './ContestModal';
+import useStyles from './index.style';
+import apis from '../../apis';
+import { renderDate } from '../../utils/date';
 
-function App() {
+const Contest = () => {
   const { t } = useTranslation();
-  return <div>Contest</div>;
-}
+  const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+  const [openModal, setOpenModal] = useState(false);
+  const [keySearch, setKeySearch] = useState('');
+  const [contests, setContests] = useState([]);
+  const [contestSelect, setContestSelect] = useState(null);
+  const [groupQuestions, setGroupQuestions] = useState([]);
+  const [pagination, setPagination] = useState({
+    rowsPerPage: 10,
+    page: 0,
+    count: 100,
+  });
 
-export default App;
+  const fetchContests = async () => {
+    const data = await apis.contest.getContests();
+    if (data && data.status) {
+      const { result } = data;
+      setPagination({
+        ...pagination,
+        count: result.metadata.count || 0,
+      });
+      setContests(result.data);
+    } else {
+      enqueueSnackbar((data && data.message) || 'Fetch data failed', {
+        variant: 'error',
+      });
+    }
+  };
+
+  const fetchGroupQuestions = async (keyword) => {
+    const data = await apis.groupQuestion.getGroupQuestions(keyword);
+    if (data && data.status) {
+      setGroupQuestions(data.result.data);
+    } else {
+      enqueueSnackbar((data && data.message) || 'Fetch data failed', {
+        variant: 'error',
+      });
+    }
+  };
+
+  const handleChangePage = async (event, newPage) => {
+    setPagination({
+      ...pagination,
+      page: newPage,
+    });
+  };
+
+  useEffect(() => {
+    fetchContests();
+    fetchGroupQuestions();
+  }, []);
+
+  const handleSearch = async (e) => {
+    const { value } = e.target;
+    setKeySearch(value);
+    setPagination({
+      ...pagination,
+      page: 0,
+    });
+  };
+
+  const handleOpenModalAdd = (e) => {
+    e.preventDefault();
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setContestSelect(null);
+  };
+
+  const handleClickRow = (row) => (e) => {
+    e.preventDefault();
+    setContestSelect(row);
+    setOpenModal(true);
+  };
+
+  const handleUpdateContest = (item, type) => {
+    if (type === 'ADD') {
+      const newContests = [{ ...item }, ...contests];
+      setContests(newContests);
+      setKeySearch('');
+      handleCloseModal();
+      return;
+    }
+    const newContests = [...contests];
+    const pos = newContests.findIndex((el) => el.id === item.id);
+    newContests[pos] = { ...item };
+    handleCloseModal();
+    setContests(newContests);
+  };
+
+  const handleDeleteContest = async (id) => {
+    const data = await apis.contest.deleteContest(id);
+    if (data && data.status) {
+      const newContests = [...contests];
+      const pos = newContests.findIndex((el) => el.id === id);
+      newContests.splice(pos, 1);
+      setContests(newContests);
+      enqueueSnackbar('Delete data success', {
+        variant: 'success',
+      });
+    } else {
+      enqueueSnackbar((data && data.message) || 'Delete data failed', {
+        variant: 'error',
+      });
+    }
+  };
+
+  const GreenCheckbox = withStyles({
+    root: {
+      color: green[400],
+      '&$checked': {
+        color: green[600],
+      },
+    },
+    checked: {},
+  })((props) => <Checkbox color="default" {...props} />);
+
+  return (
+    <div>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={2}
+      >
+        <Box>
+          <SearchBox handleSearch={handleSearch} />
+        </Box>
+        <Box display="flex">
+          <Box>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              className={classes.button}
+              startIcon={<AddIcon />}
+              onClick={handleOpenModalAdd}
+            >
+              Add Contest
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+      <Box>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">No.</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell align="center">Duration(min)</TableCell>
+                <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Password</TableCell>
+                <TableCell align="center">Active</TableCell>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {contests
+                .filter((el) => el.title.indexOf(keySearch) >= 0)
+                .slice(
+                  pagination.page * pagination.rowsPerPage,
+                  pagination.page * pagination.rowsPerPage +
+                    pagination.rowsPerPage,
+                )
+                .map((row, index) => (
+                  <TableRow
+                    key={row.id}
+                    className={classes.row}
+                    onClick={handleClickRow(row)}
+                  >
+                    <TableCell align="center">
+                      {pagination.page * pagination.rowsPerPage + index + 1}
+                    </TableCell>
+                    <TableCell>{row.title}</TableCell>
+                    <TableCell align="center">{row.examTime}</TableCell>
+                    <TableCell align="center">
+                      {moment(row.startTime).format('LLL')} -{' '}
+                      {(row.endTime && moment(row.endTime).format('LLL')) || ''}
+                    </TableCell>
+                    <TableCell>
+                      {row.password && (
+                        <Box>
+                          <LockIcon />
+                          {row.password}
+                        </Box>
+                      )}
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.isActive && (
+                        <FormControlLabel
+                          control={
+                            <GreenCheckbox checked="true" name="isActive" />
+                          }
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Box>
+                        <IconButton
+                          aria-label="delete"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteContest(row.id);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+          {contests.length > 0 && pagination.count > pagination.rowsPerPage && (
+            <TablePagination
+              component="div"
+              rowsPerPageOptions={[pagination.rowsPerPage]}
+              count={
+                contests
+                  .filter((el) => el.title.indexOf(keySearch) >= 0)
+                  .slice(
+                    pagination.page * pagination.rowsPerPage,
+                    pagination.page * pagination.rowsPerPage +
+                      pagination.rowsPerPage,
+                  ).length
+              }
+              page={pagination.page}
+              onChangePage={handleChangePage}
+              rowsPerPage={pagination.rowsPerPage}
+            />
+          )}
+        </TableContainer>
+      </Box>
+      <ContestModal
+        open={openModal}
+        handleCloseModal={handleCloseModal}
+        itemSelect={contestSelect}
+        groupQuestions={groupQuestions}
+        handleUpdateContest={handleUpdateContest}
+      />
+    </div>
+  );
+};
+
+export default Contest;
