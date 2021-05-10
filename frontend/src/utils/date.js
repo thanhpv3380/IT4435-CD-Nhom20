@@ -37,3 +37,11 @@ export function renderDate(date) {
 
   return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
 }
+
+export function countTime(date) {
+  const distance = new Date(date) - new Date();
+  const day = Math.floor(distance / 86400000);
+  const hour = Math.floor((distance - day * 86400) / 3600000);
+  const minute = Math.floor((distance - day * 86400 - hour * 3600000) / 60000);
+  return `${day} day ${hour}h ${minute}m`;
+}

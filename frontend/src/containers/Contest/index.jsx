@@ -31,7 +31,6 @@ import SearchBox from '../../components/SearchBox';
 import ContestModal from './ContestModal';
 import useStyles from './index.style';
 import apis from '../../apis';
-import { renderDate } from '../../utils/date';
 
 const Contest = () => {
   const { t } = useTranslation();
@@ -49,7 +48,7 @@ const Contest = () => {
   });
 
   const fetchContests = async () => {
-    const data = await apis.contest.getContests();
+    const data = await apis.contest.getContestsByUser();
     if (data && data.status) {
       const { result } = data;
       setPagination({
@@ -213,7 +212,7 @@ const Contest = () => {
                     </TableCell>
                     <TableCell>{row.title}</TableCell>
                     <TableCell align="center">{row.examTime}</TableCell>
-                    <TableCell align="center">
+                    <TableCell>
                       {moment(row.startTime).format('LLL')} -{' '}
                       {(row.endTime && moment(row.endTime).format('LLL')) || ''}
                     </TableCell>
@@ -227,11 +226,7 @@ const Contest = () => {
                     </TableCell>
                     <TableCell align="center">
                       {row.isActive && (
-                        <FormControlLabel
-                          control={
-                            <GreenCheckbox checked="true" name="isActive" />
-                          }
-                        />
+                        <GreenCheckbox checked="true" name="isActive" />
                       )}
                     </TableCell>
                     <TableCell>

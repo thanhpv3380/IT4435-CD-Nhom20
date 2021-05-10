@@ -57,11 +57,6 @@ const menus = [
     icon: <PersonIcon />,
     route: routes.USER,
   },
-  {
-    heading: 'Change Password',
-    icon: <LockIcon />,
-    route: routes.CHANGE_PASSWORD,
-  },
 ];
 
 const Layout = ({ children }) => {

@@ -1,72 +1,51 @@
+/* eslint-disable no-useless-return */
 import React, { useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
 import { Paper, Tabs, Tab, Grid } from '@material-ui/core';
 import TabDetail from './TabDetail';
 import useStyles from './index.style';
+import apis from '../../apis';
 
 const menus = [
   { id: 0, heading: 'All Contest' },
   { id: 1, heading: 'Đã tham gia' },
   { id: 2, heading: 'Đang diễn ra' },
   { id: 3, heading: 'Sắp diễn ra' },
-  { id: 4, heading: 'Đã diễn ra' },
+  { id: 4, heading: 'Đã kết thúc' },
 ];
+
+let contestsDefault = [];
 
 const Home = () => {
   const { t } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const [tab, setTab] = useState(0);
   const [contests, setContests] = useState([]);
+  const [contestsJoined, setContestsJoined] = useState([]);
 
   const fetchContests = async () => {
-    const data = [
-      {
-        amount_question: 0,
-        createdBy: '606866fc2ae34c38c018f371',
-        examTime: 123,
-        groupQuestion: '6076b337854523281c2c7dca',
-        id: '5',
-        startTime: '2021-05-03T16:18:00.000Z',
-        title: 'fdsfds',
-      },
-      {
-        amount_question: 0,
-        createdBy: '606866fc2ae34c38c018f371',
-        examTime: 123,
-        groupQuestion: '6076b337854523281c2c7dca',
-        id: '0',
-        startTime: '2021-05-03T16:18:00.000Z',
-        title: 'fdsfds',
-      },
-      {
-        amount_question: 0,
-        createdBy: '606866fc2ae34c38c018f371',
-        examTime: 123,
-        groupQuestion: '6076b337854523281c2c7dca',
-        id: '1',
-        startTime: '2021-05-03T16:18:00.000Z',
-        title: 'fdsfds',
-      },
-      {
-        amount_question: 0,
-        createdBy: '606866fc2ae34c38c018f371',
-        examTime: 123,
-        groupQuestion: '6076b337854523281c2c7dca',
-        id: '2',
-        startTime: '2021-05-03T16:18:00.000Z',
-        title: 'fdsfds',
-      },
-      {
-        amount_question: 0,
-        createdBy: '606866fc2ae34c38c018f371',
-        examTime: 123,
-        groupQuestion: '6076b337854523281c2c7dca',
-        id: '3',
-        startTime: '2021-05-03T16:18:00.000Z',
-        title: 'fdsfds',
-      },
-    ];
-    setContests(data);
+    const data = await apis.contest.getContests();
+    if (data && data.status) {
+      setContests(data.result.data);
+      contestsDefault = [...data.result.data];
+    } else {
+      enqueueSnackbar((data && data.message) || 'Fetch data failed', {
+        variant: 'error',
+      });
+    }
+  };
+
+  const fetchContestsJoined = async () => {
+    const data = await apis.contest.getContestsJoined();
+    if (data && data.status) {
+      setContestsJoined(data.result.data);
+    } else {
+      enqueueSnackbar((data && data.message) || 'Fetch data failed', {
+        variant: 'error',
+      });
+    }
   };
 
   useEffect(() => {
@@ -74,8 +53,43 @@ const Home = () => {
   }, []);
 
   const handleChangeTab = async (event, newValue) => {
+    console.log(newValue);
     setTab(newValue);
-    await fetchContests();
+    const date = new Date();
+    if (newValue === 0) {
+      setContests([...contestsDefault]);
+      return;
+    }
+    if (newValue === 1) {
+      if (contestsJoined.length <= 0) {
+        await fetchContestsJoined();
+      }
+      return;
+    }
+    if (newValue === 2) {
+      const newContests = contestsDefault.filter((el) => {
+        if (el.endTime && new Date(el.endTime) < date) return false;
+        if (new Date(el.startTime) > date) return false;
+        return true;
+      });
+      setContests([...newContests]);
+      return;
+    }
+    if (newValue === 3) {
+      const newContests = contestsDefault.filter(
+        (el) => new Date(el.startTime) > date,
+      );
+      setContests([...newContests]);
+      return;
+    }
+    if (newValue === 4) {
+      const newContests = contestsDefault.filter(
+        (el) => el.endTime && new Date(el.endTime) < date,
+      );
+      setContests([...newContests]);
+      return;
+    }
+    return;
   };
 
   return (
@@ -94,11 +108,20 @@ const Home = () => {
           ))}
         </Tabs>
       </Paper>
-      <Grid container spacing={3}>
-        {contests.map((el) => (
-          <TabDetail item={el} />
-        ))}
-      </Grid>
+
+      {tab === 1 ? (
+        <Grid container spacing={3}>
+          {contestsJoined.map((el) => (
+            <TabDetail item={el} />
+          ))}
+        </Grid>
+      ) : (
+        <Grid container spacing={3}>
+          {contests.map((el) => (
+            <TabDetail item={el} />
+          ))}
+        </Grid>
+      )}
     </>
   );
 };

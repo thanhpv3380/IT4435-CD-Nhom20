@@ -1,5 +1,37 @@
 const contestService = require('../services/contest');
 
+const getAllContest = async (req, res) => {
+  const { sort, fields } = req.query;
+  const { data, metadata } = await contestService.findAllContest({
+    sort,
+    fields,
+  });
+  return res.send({
+    status: 1,
+    result: {
+      data,
+      metadata,
+    },
+  });
+};
+
+const getAllContestJoined = async (req, res) => {
+  const { sort, fields } = req.query;
+  const { user } = req;
+  const { data, metadata } = await contestService.findAllContestJoined({
+    userId: user._id,
+    sort,
+    fields,
+  });
+  return res.send({
+    status: 1,
+    result: {
+      data,
+      metadata,
+    },
+  });
+};
+
 const getAllContestByUser = async (req, res) => {
   const { sort, fields } = req.query;
   const { user } = req;
@@ -48,6 +80,8 @@ const deleteContest = async (req, res) => {
 };
 
 module.exports = {
+  getAllContest,
+  getAllContestJoined,
   getAllContestByUser,
   getContest,
   createContest,

@@ -8,7 +8,6 @@ import { getCookie } from '../utils/cookie';
 import routes from '../constants/route';
 import appRoutes from './appRoutes';
 import actions from '../redux/actions';
-import Layout from '../components/Layout';
 
 export default () => {
   const dispatch = useDispatch();

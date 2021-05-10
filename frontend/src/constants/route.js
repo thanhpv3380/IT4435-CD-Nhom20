@@ -6,6 +6,6 @@ export default {
   GROUP_QUESTIONS: '/groupQuestions',
   CONTEST: '/contests',
   QUESTION: '/groupQuestions/:id/questions',
-  CHANGE_PASSWORD: '/change-password',
-  LOGOUT: '/logout',
+  PREPARE_EXAM: '/contest/:id/prepare',
+  EXAM: '/contest/:id/exam',
 };

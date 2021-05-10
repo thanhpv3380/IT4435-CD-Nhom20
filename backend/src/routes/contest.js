@@ -4,8 +4,14 @@ const { auth } = require('../middlewares/auth');
 const omitReq = require('../middlewares/omitReq');
 const contestController = require('../controllers/contest');
 
+router.get('/contests', asyncMiddleware(contestController.getAllContest));
 router.get(
-  '/contests',
+  '/contests/joined',
+  auth,
+  asyncMiddleware(contestController.getAllContestJoined),
+);
+router.get(
+  '/contests/createByUser',
   auth,
   asyncMiddleware(contestController.getAllContestByUser),
 );

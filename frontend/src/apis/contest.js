@@ -11,6 +11,28 @@ export async function getContests(data) {
   });
   return res;
 }
+export async function getContestsJoined(data) {
+  const res = await api({
+    method: 'GET',
+    url: '/contests/joined',
+    param: {
+      sort: data && data.sort,
+      fields: data && data.fields,
+    },
+  });
+  return res;
+}
+export async function getContestsByUser(data) {
+  const res = await api({
+    method: 'GET',
+    url: '/contests/createByUser',
+    param: {
+      sort: data && data.sort,
+      fields: data && data.fields,
+    },
+  });
+  return res;
+}
 
 export async function getContest() {
   const res = await api({

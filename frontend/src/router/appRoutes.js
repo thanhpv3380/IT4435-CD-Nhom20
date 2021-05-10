@@ -5,7 +5,8 @@ import User from '../pages/User';
 import Contest from '../pages/Contest';
 import GroupQuestion from '../pages/GroupQuestion';
 import Question from '../pages/Question';
-import ChangePassword from '../pages/ChangePassword';
+import PrepareExam from '../pages/PrepareExam';
+import Exam from '../pages/Exam';
 import routes from '../constants/route';
 
 export default [
@@ -59,8 +60,15 @@ export default [
     isPrivate: true,
   },
   {
-    path: routes.CHANGE_PASSWORD,
-    component: ChangePassword,
+    path: routes.PREPARE_EXAM,
+    component: PrepareExam,
+    exact: true,
+    restricted: false,
+    isPrivate: true,
+  },
+  {
+    path: routes.EXAM,
+    component: Exam,
     exact: true,
     restricted: false,
     isPrivate: true,

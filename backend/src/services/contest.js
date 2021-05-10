@@ -2,24 +2,39 @@ const CustomError = require('../errors/CustomError');
 const errorCodes = require('../errors/code');
 
 const contestDao = require('../daos/contest');
+const resultDao = require('../daos/result');
 
-const findAllContestByUser = async ({
-  userId,
-  key,
-  limit,
-  offset,
-  sort,
-  query,
-}) => {
+const findAllContest = async ({ sort, fields }) => {
   const { data, metadata } = await contestDao.findAllContest({
-    key,
-    searchFields: ['title', 'description'],
-    query: { ...query, createdBy: userId },
-    offset,
-    limit,
+    fields,
     sort,
+    query: { isActive: true },
+    populate: ['createdBy'],
   });
+  return { data, metadata };
+};
 
+const findAllContestJoined = async ({ userId, sort, fields }) => {
+  const { data, metadata } = await resultDao.findAllResult({
+    query: {
+      participant: userId,
+    },
+    sort,
+    fields,
+    populate: {
+      path: 'contest',
+      populate: { path: 'createdBy' },
+    },
+  });
+  return { data, metadata };
+};
+
+const findAllContestByUser = async ({ userId, sort, fields }) => {
+  const { data, metadata } = await contestDao.findAllContest({
+    fields,
+    sort,
+    query: { createdBy: userId },
+  });
   return { data, metadata };
 };
 
@@ -74,6 +89,8 @@ const deleteContest = async (id) => {
 };
 
 module.exports = {
+  findAllContest,
+  findAllContestJoined,
   findAllContestByUser,
   findContestById,
   createContest,
