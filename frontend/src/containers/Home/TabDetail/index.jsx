@@ -18,25 +18,12 @@ import {
 } from '@material-ui/core';
 import { AccessTime as AccessTimeIcon } from '@material-ui/icons';
 import useStyles from './index.style';
-import { countTime } from '../../../utils/date';
+import { checkDate } from '../../../utils/date';
 
 const TabDetail = ({ item }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const classes = useStyles();
-
-  const checkDate = (el) => {
-    const date = new Date();
-    const startTime = new Date(el.startTime);
-    const endTime = el.endTime && new Date(el.endTime);
-    if (endTime && endTime < date) {
-      return 'Ended';
-    }
-    if (startTime > date) {
-      return `Upcoming: ${countTime(startTime)}`;
-    }
-    return `Time remain: ${moment(startTime).fromNow()}`;
-  };
 
   const handleJoin = (e) => {
     e.preventDefault();

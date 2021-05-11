@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const getDate = (date) => {
   const day = date.getDate();
   const month = date.getMonth();
@@ -44,4 +46,17 @@ export function countTime(date) {
   const hour = Math.floor((distance - day * 86400) / 3600000);
   const minute = Math.floor((distance - day * 86400 - hour * 3600000) / 60000);
   return `${day} day ${hour}h ${minute}m`;
+}
+
+export function checkDate(el) {
+  const date = new Date();
+  const startTime = new Date(el.startTime);
+  const endTime = el.endTime && new Date(el.endTime);
+  if (endTime && endTime < date) {
+    return 'Ended';
+  }
+  if (startTime > date) {
+    return `Upcoming: ${countTime(startTime)}`;
+  }
+  return `Time remain: ${moment(startTime).fromNow()}`;
 }

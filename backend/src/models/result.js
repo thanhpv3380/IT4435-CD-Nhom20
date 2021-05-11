@@ -8,14 +8,16 @@ const resultSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'User',
     },
-    score: Number,
+    amountCorrectQuestion: Number,
+    amountQuestion: Number,
     history: [
       {
         question: {
           type: ObjectId,
           ref: 'Question',
         },
-        choice: Number,
+        choice: String,
+        isCorrect: Boolean,
       },
     ],
     comment: String,

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
-import { Paper, Tabs, Tab, Grid } from '@material-ui/core';
+import { Paper, Tabs, Tab, Grid, Box, Typography } from '@material-ui/core';
 import TabDetail from './TabDetail';
 import useStyles from './index.style';
 import apis from '../../apis';
@@ -22,6 +22,8 @@ const Home = () => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const [tab, setTab] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [contests, setContests] = useState([]);
   const [contestsJoined, setContestsJoined] = useState([]);
 
@@ -30,6 +32,7 @@ const Home = () => {
     if (data && data.status) {
       setContests(data.result.data);
       contestsDefault = [...data.result.data];
+      setIsLoading(false);
     } else {
       enqueueSnackbar((data && data.message) || 'Fetch data failed', {
         variant: 'error',
@@ -40,7 +43,7 @@ const Home = () => {
   const fetchContestsJoined = async () => {
     const data = await apis.contest.getContestsJoined();
     if (data && data.status) {
-      setContestsJoined(data.result.data);
+      setContestsJoined(data.result.contests);
     } else {
       enqueueSnackbar((data && data.message) || 'Fetch data failed', {
         variant: 'error',
@@ -91,6 +94,16 @@ const Home = () => {
     }
     return;
   };
+
+  if (isLoading) {
+    return (
+      <Box>
+        <Typography variant="h5" gutterBottom>
+          Loading...
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <>

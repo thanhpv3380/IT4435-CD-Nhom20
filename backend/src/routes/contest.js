@@ -36,5 +36,25 @@ router.delete(
   auth,
   asyncMiddleware(contestController.deleteContest),
 );
+router.post(
+  '/contests/:id/verifyPassword',
+  auth,
+  asyncMiddleware(contestController.verifyPassword),
+);
+router.get(
+  '/contests/:id/getAllQuestion',
+  auth,
+  asyncMiddleware(contestController.getAllQuestion),
+);
+router.post(
+  '/contests/:id/mark',
+  auth,
+  asyncMiddleware(contestController.mark),
+);
+router.get(
+  '/contests/:id/results',
+  auth,
+  asyncMiddleware(contestController.getAllResultByContest),
+);
 
 module.exports = router;

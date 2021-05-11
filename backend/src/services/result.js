@@ -1,22 +1,16 @@
+/* eslint-disable no-plusplus */
 const CustomError = require('../errors/CustomError');
 const errorCodes = require('../errors/code');
 
 const resultDao = require('../daos/result');
+const questionDao = require('../daos/question');
 
-const findAllResultByContest = async ({
-  contestId,
-  limit,
-  offset,
-  sort,
-  query,
-}) => {
+const findAllResultByContest = async ({ contestId }) => {
   const { data, metadata } = await resultDao.findAllResult({
-    query: { ...query, contest: contestId },
-    offset,
-    limit,
-    sort,
+    query: { contest: contestId },
+    sort: ['amountCorrectQuestion_desc'],
+    populate: ['participant'],
   });
-
   return { data, metadata };
 };
 
@@ -43,15 +37,47 @@ const findResult = async (userId, contestId) => {
   return result;
 };
 
-const createResult = async ({ participant, history, doTime, contest }) => {
-  const score = 10;
-  const result = resultDao.createResult({
-    participant,
-    score,
+const createResult = async ({
+  userId,
+  doTime,
+  contestId,
+  groupQuestionId,
+  answers,
+}) => {
+  const { data: listQuestion } = await questionDao.findAllQuestion({
+    query: {
+      groupQuestion: groupQuestionId,
+    },
+  });
+
+  const newAnswers = {};
+  Object.keys(answers).forEach((el) => {
+    const value = answers[el];
+    newAnswers[el.toLowerCase()] = value;
+  });
+
+  let numQuestionCorrect = 0;
+  const history = listQuestion.map((question) => {
+    const correctAnswer = question.answers.find((answer) => answer.isCorrect);
+    let isCorrect = false;
+    if (newAnswers[question._id] === correctAnswer.answerId) {
+      isCorrect = true;
+      numQuestionCorrect++;
+    }
+    return {
+      question: question._id,
+      choice: newAnswers[question._id],
+      isCorrect,
+    };
+  });
+
+  const result = await resultDao.createResult({
+    participant: userId,
+    amountCorrectQuestion: numQuestionCorrect,
+    amountQuestion: listQuestion.length,
     history,
-    comment: '',
     doTime,
-    contest,
+    contest: contestId,
   });
 
   return result;

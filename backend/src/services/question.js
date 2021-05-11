@@ -56,6 +56,7 @@ const createQuestion = async ({
 };
 
 const updateQuestion = async (id, data) => {
+  console.log(data);
   const question = await questionDao.updateQuestion(id, data);
   return question;
 };

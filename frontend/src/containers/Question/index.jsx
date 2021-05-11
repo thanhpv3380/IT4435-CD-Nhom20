@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import mongoid from 'mongoid-js';
 import readXlsxFile from 'read-excel-file';
 import {
   Button,
@@ -182,6 +183,7 @@ const Question = () => {
                 description: row[2],
                 explain: row[3],
                 answers: row.slice(4, row.length - 1).map((ele, index) => ({
+                  answerId: mongoid(),
                   position: index,
                   content: ele,
                   isCorrect: parseInt(row[row.length - 1]) === index + 1,

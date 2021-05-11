@@ -3,6 +3,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
+import mongoid from 'mongoid-js';
 import {
   Modal,
   TextField,
@@ -47,6 +48,7 @@ const QuestionModal = ({
   const handleAddAnswer = (e) => {
     e.preventDefault();
     const answerData = {
+      answerId: mongoid(),
       position: (question && question.answers && question.answers.length) || 0,
       content: '',
       isCorrect: false,

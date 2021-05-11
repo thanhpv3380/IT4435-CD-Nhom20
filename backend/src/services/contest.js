@@ -3,6 +3,10 @@ const errorCodes = require('../errors/code');
 
 const contestDao = require('../daos/contest');
 const resultDao = require('../daos/result');
+const questionDao = require('../daos/question');
+const { checkDate } = require('../utils/date');
+const constants = require('../constants');
+const contest = require('../models/contest');
 
 const findAllContest = async ({ sort, fields }) => {
   const { data, metadata } = await contestDao.findAllContest({
@@ -10,12 +14,13 @@ const findAllContest = async ({ sort, fields }) => {
     sort,
     query: { isActive: true },
     populate: ['createdBy'],
+    exclude: { password: 0 },
   });
   return { data, metadata };
 };
 
 const findAllContestJoined = async ({ userId, sort, fields }) => {
-  const { data, metadata } = await resultDao.findAllResult({
+  const { data } = await resultDao.findAllResult({
     query: {
       participant: userId,
     },
@@ -26,7 +31,15 @@ const findAllContestJoined = async ({ userId, sort, fields }) => {
       populate: { path: 'createdBy' },
     },
   });
-  return { data, metadata };
+  const listContestId = {};
+  const contests = [];
+  data.forEach((el) => {
+    if (!listContestId[el.contest._id]) {
+      listContestId[el.contest._id] = 1;
+      contests.push(el.contest);
+    }
+  });
+  return contests;
 };
 
 const findAllContestByUser = async ({ userId, sort, fields }) => {
@@ -38,12 +51,33 @@ const findAllContestByUser = async ({ userId, sort, fields }) => {
   return { data, metadata };
 };
 
-const findContestById = async (id) => {
+const findContestById = async ({ id }) => {
   const contest = await contestDao.findContest({ _id: id }, null, [
     'createdBy',
   ]);
   if (!contest) {
     throw new CustomError(errorCodes.NOT_FOUND);
+  }
+  if (!contest.isActive) {
+    throw new CustomError(errorCodes.CONTEST_IS_PRIVATE);
+  }
+
+  if (contest.password) {
+    delete contest.password;
+    contest.isLock = true;
+  }
+
+  const status = checkDate(contest);
+  contest.status = status;
+
+  if (status === constants.ENDED) {
+    const results = await resultDao.findAllResult({
+      query: {
+        contest: contest._id,
+      },
+      populate: ['participant'],
+    });
+    contest.results = results;
   }
   return contest;
 };
@@ -58,8 +92,7 @@ const createContest = async ({
   examTime,
   amountQuestion,
   groupQuestion,
-  isPublic,
-  code,
+  isActive,
   password,
 }) => {
   const contest = await contestDao.createContest({
@@ -72,8 +105,7 @@ const createContest = async ({
     examTime,
     amountQuestion,
     groupQuestion,
-    isPublic,
-    code,
+    isActive,
     password,
   });
   return contest;
@@ -88,6 +120,41 @@ const deleteContest = async (id) => {
   await contestDao.deleteContest(id);
 };
 
+const verifyPassword = async ({ id, password }) => {
+  const contest = await contestDao.findContest({
+    _id: id,
+    password,
+  });
+  if (!contest) {
+    throw new CustomError(errorCodes.NOT_FOUND);
+  }
+};
+
+const getAllQuestion = async (id) => {
+  const contest = await contestDao.findContest({
+    _id: id,
+  });
+  if (!contest) {
+    throw new CustomError(errorCodes.NOT_FOUND);
+  }
+
+  let listQuestion = [];
+  if (contest.groupQuestion) {
+    const { data } = await questionDao.findAllQuestion({
+      query: {
+        groupQuestion: contest.groupQuestion,
+      },
+      exclude: {
+        'answers.isCorrect': 0,
+      },
+    });
+    listQuestion = [...data];
+  }
+  console.log({ id, listQuestion });
+  contest.questions = [...listQuestion];
+  return contest;
+};
+
 module.exports = {
   findAllContest,
   findAllContestJoined,
@@ -96,4 +163,6 @@ module.exports = {
   createContest,
   updateContest,
   deleteContest,
+  verifyPassword,
+  getAllQuestion,
 };

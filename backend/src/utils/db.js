@@ -9,6 +9,7 @@ const findAll = async ({
   fields,
   sort = ['createdAt_desc'],
   populate,
+  exclude,
 } = {}) => {
   const s =
     searchFields &&
@@ -32,7 +33,7 @@ const findAll = async ({
   );
   const total = await model.estimatedDocumentCount();
   const documents = await model
-    .find(key ? { $or: s, ...query } : { ...query })
+    .find(key ? { $or: s, ...query } : { ...query }, exclude && { ...exclude })
     .populate(populate)
     .skip(parseInt(offset) || 0)
     .limit(parseInt(limit) || null)

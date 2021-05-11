@@ -10,6 +10,7 @@ const findAllContest = async ({
   fields,
   sort,
   populate,
+  exclude,
 }) => {
   const { data, metadata } = await findAll({
     model: Contest,
@@ -21,6 +22,7 @@ const findAllContest = async ({
     fields,
     sort,
     populate,
+    exclude,
   });
   return {
     data,
@@ -43,8 +45,7 @@ const createContest = async ({
   examTime,
   amountQuestion = 0,
   groupQuestion,
-  isPublic = false,
-  code,
+  isActive = false,
   password,
 }) => {
   const contest = await Contest.create({
@@ -57,8 +58,7 @@ const createContest = async ({
     examTime,
     amountQuestion,
     groupQuestion,
-    isPublic,
-    code,
+    isActive,
     password,
   });
 
@@ -66,7 +66,6 @@ const createContest = async ({
 };
 
 const updateContest = async (id, data) => {
-  console.log(data);
   const contest = await Contest.findByIdAndUpdate(id, data, {
     new: true,
   });

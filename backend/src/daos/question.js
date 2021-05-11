@@ -10,6 +10,7 @@ const findAllQuestion = async ({
   fields,
   sort,
   populate,
+  exclude,
 }) => {
   const { data, metadata } = await findAll({
     model: Question,
@@ -21,6 +22,7 @@ const findAllQuestion = async ({
     fields,
     sort,
     populate,
+    exclude,
   });
   return {
     data,

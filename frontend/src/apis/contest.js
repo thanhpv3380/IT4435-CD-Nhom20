@@ -34,10 +34,10 @@ export async function getContestsByUser(data) {
   return res;
 }
 
-export async function getContest() {
+export async function getContest(id) {
   const res = await api({
     method: 'GET',
-    url: '/contests/:id',
+    url: `/contests/${id}`,
   });
   return res;
 }
@@ -64,6 +64,40 @@ export async function deleteContest(id) {
   const res = await api({
     method: 'DELETE',
     url: `/contests/${id}`,
+  });
+  return res;
+}
+
+export async function verifyPassword({ id, password }) {
+  const res = await api({
+    method: 'POST',
+    url: `/contests/${id}/verifyPassword`,
+    data: { password },
+  });
+  return res;
+}
+
+export async function getQuestions(id) {
+  const res = await api({
+    method: 'GET',
+    url: `/contests/${id}/getAllQuestion`,
+  });
+  return res;
+}
+
+export async function mark({ doTime, contestId, groupQuestionId, answers }) {
+  const res = await api({
+    method: 'POST',
+    url: `/contests/${contestId}/mark`,
+    data: { doTime, groupQuestionId, answers },
+  });
+  return res;
+}
+
+export async function getResultByContest(id) {
+  const res = await api({
+    method: 'GET',
+    url: `/contests/${id}/results`,
   });
   return res;
 }

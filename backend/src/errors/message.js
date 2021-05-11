@@ -10,6 +10,8 @@ const getErrorMessage = (code) => {
       return 'Email existed';
     case codes.ITEM_EXIST:
       return 'Item is exist';
+    case codes.CONTEST_IS_PRIVATE:
+      return 'Contest is private';
     default:
       return null;
   }

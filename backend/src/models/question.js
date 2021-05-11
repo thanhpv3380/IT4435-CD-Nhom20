@@ -10,6 +10,7 @@ const questionSchema = new mongoose.Schema(
     explain: String,
     answers: [
       {
+        answerId: String,
         position: Number,
         content: String,
         isCorrect: Boolean,

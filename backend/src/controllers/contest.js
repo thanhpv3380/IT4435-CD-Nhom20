@@ -1,4 +1,5 @@
 const contestService = require('../services/contest');
+const resultService = require('../services/result');
 
 const getAllContest = async (req, res) => {
   const { sort, fields } = req.query;
@@ -18,7 +19,7 @@ const getAllContest = async (req, res) => {
 const getAllContestJoined = async (req, res) => {
   const { sort, fields } = req.query;
   const { user } = req;
-  const { data, metadata } = await contestService.findAllContestJoined({
+  const contests = await contestService.findAllContestJoined({
     userId: user._id,
     sort,
     fields,
@@ -26,8 +27,7 @@ const getAllContestJoined = async (req, res) => {
   return res.send({
     status: 1,
     result: {
-      data,
-      metadata,
+      contests,
     },
   });
 };
@@ -51,7 +51,11 @@ const getAllContestByUser = async (req, res) => {
 
 const getContest = async (req, res) => {
   const { id } = req.params;
-  const contest = await contestService.findContestById(id);
+  const { user } = req;
+  const contest = await contestService.findContestById({
+    id,
+    userId: user._id,
+  });
   return res.send({ status: 1, result: { contest } });
 };
 
@@ -79,6 +83,41 @@ const deleteContest = async (req, res) => {
   return res.send({ status: 1 });
 };
 
+const verifyPassword = async (req, res) => {
+  const { id } = req.params;
+  const { password } = req.body;
+  await contestService.verifyPassword({ id, password });
+  return res.send({ status: 1 });
+};
+
+const getAllQuestion = async (req, res) => {
+  const { id } = req.params;
+  const contest = await contestService.getAllQuestion(id);
+  return res.send({ status: 1, result: { contest } });
+};
+
+const mark = async (req, res) => {
+  const data = req.body;
+  const { id: contestId } = req.params;
+  const { user } = req;
+  const result = await resultService.createResult({
+    userId: user._id,
+    contestId,
+    ...data,
+  });
+
+  return res.send({ status: 1, result: { result } });
+};
+
+const getAllResultByContest = async (req, res) => {
+  const { id: contestId } = req.params;
+  const { data, metadata } = await resultService.findAllResultByContest({
+    contestId,
+  });
+
+  return res.send({ status: 1, result: { data, metadata } });
+};
+
 module.exports = {
   getAllContest,
   getAllContestJoined,
@@ -87,4 +126,8 @@ module.exports = {
   createContest,
   updateContest,
   deleteContest,
+  verifyPassword,
+  getAllQuestion,
+  mark,
+  getAllResultByContest,
 };

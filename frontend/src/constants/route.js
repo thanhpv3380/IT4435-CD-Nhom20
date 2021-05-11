@@ -8,4 +8,5 @@ export default {
   QUESTION: '/groupQuestions/:id/questions',
   PREPARE_EXAM: '/contest/:id/prepare',
   EXAM: '/contest/:id/exam',
+  EXAM_DETAIL: '/contest/:id/exam/detail',
 };
