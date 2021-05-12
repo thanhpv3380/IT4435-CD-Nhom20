@@ -25,16 +25,18 @@ const findResultById = async (id) => {
   return result;
 };
 
-const findResult = async (userId, contestId) => {
-  const result = await resultDao.findResult(
-    { participant: userId, contest: contestId },
-    null,
-    ['participant', 'history.question'],
-  );
-  if (!result) {
-    throw new CustomError(errorCodes.NOT_FOUND);
-  }
-  return result;
+const findResultByUserInContest = async ({ userId, contestId }) => {
+  const { data, metadata } = await resultDao.findAllResult({
+    query: { participant: userId, contest: contestId },
+    sort: ['createdAt_asc'],
+    populate: ['history.question'],
+    exclude: {
+      participant: 0,
+      contest: 0,
+    },
+  });
+
+  return { data, metadata };
 };
 
 const createResult = async ({
@@ -98,7 +100,7 @@ const deleteResult = async (id) => {
 module.exports = {
   findAllResultByContest,
   findResultById,
-  findResult,
+  findResultByUserInContest,
   createResult,
   updateComment,
   deleteResult,

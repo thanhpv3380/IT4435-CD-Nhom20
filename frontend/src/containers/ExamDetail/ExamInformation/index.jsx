@@ -2,32 +2,36 @@
 /* eslint-disable consistent-return */
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Paper, Typography, Box, TextField, Button } from '@material-ui/core';
 import {
   Description as DescriptionIcon,
-  Timer as TimerIcon,
   HourglassEmpty as HourglassEmptyIcon,
 } from '@material-ui/icons';
 import useStyles from './index.style';
-import apis from '../../apis';
-import constants from '../../constants';
+import apis from '../../../apis';
+import constants from '../../../constants';
+import errorCodes from '../../../constants/errorCodes';
+import LoadingPage from '../../../components/LoadingPage';
 
-const PrepareExam = () => {
+const PrepareExam = ({ examId }) => {
   const classes = useStyles();
-  const { id } = useParams();
+
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
   const [contest, setContest] = useState();
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleCheckPassword = async (e) => {
-    e.preventDefault();
+  const handleRedirectToExamTest = () => {
+    history.push(`/contest/${examId}/exam/test`);
+  };
+
+  const handleCheckPassword = async () => {
     try {
-      const data = await apis.contest.verifyPassword({ id, password });
+      const data = await apis.contest.verifyPassword({ examId, password });
       if (data.status) {
-        history.push(`/contest/${id}/exam`);
+        handleRedirectToExamTest();
       } else {
         enqueueSnackbar(data.message || 'Check password failed', {
           variant: 'error',
@@ -42,13 +46,13 @@ const PrepareExam = () => {
 
   const fetchContest = async () => {
     try {
-      const data = await apis.contest.getContest(id);
+      const data = await apis.contest.getContest(examId);
       if (data.status) {
         const { contest: contestData } = data.result;
         setContest(contestData);
         setIsLoading(false);
       } else {
-        if (data.code === 1005) {
+        if (data.code === errorCodes.CONTEST_IS_PRIVATE) {
           history.push('/');
         }
         enqueueSnackbar(data.message || 'Fetch data failed', {
@@ -94,7 +98,9 @@ const PrepareExam = () => {
             variant="contained"
             color="primary"
             size="large"
-            onClick={handleCheckPassword}
+            onClick={
+              contest.isLock ? handleCheckPassword : handleRedirectToExamTest
+            }
           >
             Start
           </Button>
@@ -123,13 +129,7 @@ const PrepareExam = () => {
   };
 
   if (isLoading) {
-    return (
-      <Box>
-        <Typography variant="h5" gutterBottom>
-          Loading...
-        </Typography>
-      </Box>
-    );
+    return <LoadingPage />;
   }
 
   return (

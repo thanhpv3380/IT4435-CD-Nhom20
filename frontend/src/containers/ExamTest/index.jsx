@@ -7,7 +7,6 @@ import {
   Paper,
   Typography,
   Box,
-  TextField,
   Grid,
   Button,
   RadioGroup,
@@ -22,6 +21,7 @@ import {
 } from '@material-ui/icons';
 import useStyles from './index.style';
 import apis from '../../apis';
+import LoadingPage from '../../components/LoadingPage';
 
 const PrepareExam = () => {
   const classes = useStyles();
@@ -112,11 +112,7 @@ const PrepareExam = () => {
   };
 
   if (isLoading) {
-    return (
-      <Box>
-        <Typography variant="h6">Loading...</Typography>
-      </Box>
-    );
+    return <LoadingPage />;
   }
   return (
     <div className={isFullscreen && classes.fullscreen}>

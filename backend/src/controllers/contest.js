@@ -118,6 +118,17 @@ const getAllResultByContest = async (req, res) => {
   return res.send({ status: 1, result: { data, metadata } });
 };
 
+const getAllResultByUserInContest = async (req, res) => {
+  const { id: contestId } = req.params;
+  const { user } = req;
+  const { data, metadata } = await resultService.findResultByUserInContest({
+    contestId,
+    userId: user._id,
+  });
+
+  return res.send({ status: 1, result: { data, metadata } });
+};
+
 module.exports = {
   getAllContest,
   getAllContestJoined,
@@ -130,4 +141,5 @@ module.exports = {
   getAllQuestion,
   mark,
   getAllResultByContest,
+  getAllResultByUserInContest,
 };

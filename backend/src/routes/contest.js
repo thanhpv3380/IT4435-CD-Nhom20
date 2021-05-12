@@ -56,5 +56,10 @@ router.get(
   auth,
   asyncMiddleware(contestController.getAllResultByContest),
 );
+router.get(
+  '/contests/:id/results/user',
+  auth,
+  asyncMiddleware(contestController.getAllResultByUserInContest),
+);
 
 module.exports = router;

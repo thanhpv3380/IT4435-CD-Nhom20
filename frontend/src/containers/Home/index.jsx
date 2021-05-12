@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
-import { Paper, Tabs, Tab, Grid, Box, Typography } from '@material-ui/core';
+import { Paper, Tabs, Tab, Grid } from '@material-ui/core';
 import TabDetail from './TabDetail';
 import useStyles from './index.style';
 import apis from '../../apis';
+import LoadingPage from '../../components/LoadingPage';
 
 const menus = [
   { id: 0, heading: 'All Contest' },
@@ -96,13 +97,7 @@ const Home = () => {
   };
 
   if (isLoading) {
-    return (
-      <Box>
-        <Typography variant="h5" gutterBottom>
-          Loading...
-        </Typography>
-      </Box>
-    );
+    return <LoadingPage />;
   }
 
   return (

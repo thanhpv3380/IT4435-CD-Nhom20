@@ -27,7 +27,7 @@ const TabDetail = ({ item }) => {
 
   const handleJoin = (e) => {
     e.preventDefault();
-    history.push(`/contest/${item.id}/prepare`);
+    history.push(`/contest/${item.id}/exam/detail`);
   };
 
   return (

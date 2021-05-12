@@ -5,8 +5,7 @@ import User from '../pages/User';
 import Contest from '../pages/Contest';
 import GroupQuestion from '../pages/GroupQuestion';
 import Question from '../pages/Question';
-import PrepareExam from '../pages/PrepareExam';
-import Exam from '../pages/Exam';
+import ExamTest from '../pages/ExamTest';
 import ExamDetail from '../pages/ExamDetail';
 import routes from '../constants/route';
 
@@ -61,15 +60,8 @@ export default [
     isPrivate: true,
   },
   {
-    path: routes.PREPARE_EXAM,
-    component: PrepareExam,
-    exact: true,
-    restricted: false,
-    isPrivate: true,
-  },
-  {
-    path: routes.EXAM,
-    component: Exam,
+    path: routes.EXAM_TEST,
+    component: ExamTest,
     exact: true,
     restricted: false,
     isPrivate: true,

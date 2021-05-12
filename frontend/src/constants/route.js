@@ -6,7 +6,6 @@ export default {
   GROUP_QUESTIONS: '/groupQuestions',
   CONTEST: '/contests',
   QUESTION: '/groupQuestions/:id/questions',
-  PREPARE_EXAM: '/contest/:id/prepare',
-  EXAM: '/contest/:id/exam',
+  EXAM_TEST: '/contest/:id/exam/test',
   EXAM_DETAIL: '/contest/:id/exam/detail',
 };

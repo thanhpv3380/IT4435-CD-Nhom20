@@ -6,7 +6,6 @@ const resultDao = require('../daos/result');
 const questionDao = require('../daos/question');
 const { checkDate } = require('../utils/date');
 const constants = require('../constants');
-const contest = require('../models/contest');
 
 const findAllContest = async ({ sort, fields }) => {
   const { data, metadata } = await contestDao.findAllContest({
@@ -150,7 +149,6 @@ const getAllQuestion = async (id) => {
     });
     listQuestion = [...data];
   }
-  console.log({ id, listQuestion });
   contest.questions = [...listQuestion];
   return contest;
 };
