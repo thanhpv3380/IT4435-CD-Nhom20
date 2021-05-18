@@ -18,11 +18,6 @@ Quản lý cuộc thi trắc nghiệm online
 10. Thiết kế UI, api trang quản lí cuộc thi
 11. Thiết kế UI, api trang chủ xem danh sách cuộc thi
 12. Thiết kế UI, api trang thi 
-### Các công việc đã xong  (1,2,3,4,5,6,7,8)
-### Các công việc đang làm 
-9. Thiết kế UI, api trang quản lí câu hỏi và nhóm câu hỏi (Thành)
-10.  Thiết kế UI, api trang quản lí cuộc thi (Trọng)
-11. Thiết kế UI, api trang chủ xem danh sách cuộc thi (Long)
-12. Thiết kế UI, api trang thi (Thông) 
+### Tiến độ công việc: https://github.com/thanhpv3380/IT4435-CD-Nhom20/projects/1
 
 
