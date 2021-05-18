@@ -11,24 +11,110 @@ import {
   Paper,
   TableBody,
   Avatar,
-  IconButton,
+  TablePagination,
+  Button,
 } from '@material-ui/core';
-import { Visibility as VisibilityIcon } from '@material-ui/icons';
+import Highcharts from 'highcharts';
 import useStyles from './index.style';
 import apis from '../../../apis';
 import LoadingPage from '../../../components/LoadingPage';
 
-const ExamDetail = ({ examId }) => {
+const ExamDetail = ({ examId, role, resultId }) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [numberOfQuestion, setNumberOfQuestion] = useState(0);
+  const [pagination, setPagination] = useState({
+    count: 100,
+    page: 0,
+    rowsPerPage: 5,
+  });
+
+  const handleChangePage = (event, newPage) => {
+    setPagination({
+      ...pagination,
+      page: newPage,
+    });
+  };
+
+  const renderArrayFromNumberQuestion = () => {
+    const arr = [];
+
+    if (results.length > 0) {
+      const firstEle = results[0];
+      // eslint-disable-next-line operator-assignment
+      for (let i = 0; i <= firstEle.amountQuestion; i = i + 1) arr.push(0);
+    }
+    console.log(arr);
+    return [...arr];
+  };
+
+  const renderDataChart = () => {
+    const arr = renderArrayFromNumberQuestion(numberOfQuestion);
+    results.forEach((el) => {
+      // eslint-disable-next-line no-plusplus
+      arr[el.amountCorrectQuestion]++;
+    });
+    console.log({ arr });
+    return arr;
+  };
+
+  const highChartsRender = () => {
+    Highcharts.chart({
+      chart: {
+        type: ['column'],
+        renderTo: 'graph-summary-contest',
+      },
+      title: {
+        text: 'Statistic Data',
+      },
+      xAxis: {
+        title: {
+          text: 'Số câu đúng',
+        },
+        categories: renderArrayFromNumberQuestion().map((el, index) => index),
+      },
+      yAxis: {
+        title: {
+          text: 'Số người',
+        },
+      },
+      legend: {
+        layout: 'horizontal',
+        align: 'center',
+        verticalAlign: 'top',
+        borderWidth: 0,
+        itemDistance: 30,
+        margin: 5,
+        display: 'none',
+      },
+      series: [
+        {
+          name: 'Số người',
+          data: renderDataChart(),
+          color: '#f6a61f',
+        },
+      ],
+    });
+  };
 
   const fetchResults = async () => {
     const data = await apis.contest.getResultByContest(examId);
     if (data && data.status) {
       const { result } = data;
+
+      const resultIndex = result.data.findIndex((el) => el.id === resultId);
+      let page = 0;
+      if (resultIndex >= 0) {
+        page = Math.floor(resultIndex / pagination.rowsPerPage);
+      }
       setResults(result.data);
+      setPagination({
+        ...pagination,
+        count: result.data.length,
+        page,
+      });
       setIsLoading(false);
     } else {
       enqueueSnackbar((data && data.message) || 'Fetch data failed', {
@@ -41,52 +127,96 @@ const ExamDetail = ({ examId }) => {
     fetchResults();
   }, []);
 
+  useEffect(() => {
+    if (!isLoading) {
+      highChartsRender();
+    }
+  }, [isLoading]);
+
   if (isLoading) {
     return <LoadingPage />;
   }
+
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">No.</TableCell>
-              <TableCell>Participant</TableCell>
-              <TableCell align="center">Amount Correct </TableCell>
-              <TableCell align="center">Time do exam</TableCell>
-              <TableCell align="center">Date</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {results.map((row, index) => (
-              <TableRow key={row.id} className={classes.row}>
-                <TableCell align="center">{index + 1}</TableCell>
-                <TableCell>
-                  <Box display="flex" alignItems="center">
-                    <Avatar
-                      alt="avatar"
-                      src={row.participant.avatar}
-                      style={{
-                        height: '25px',
-                        width: '25px',
-                        marginRight: '3px',
-                      }}
-                    />
-                    {row.participant.name}
-                  </Box>
-                </TableCell>
-                <TableCell align="center">
-                  {row.amountCorrectQuestion}
-                </TableCell>
-                <TableCell align="center">{row.doTime}</TableCell>
-                <TableCell align="center">
-                  {moment(row.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
-                </TableCell>
+      <Box>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">No.</TableCell>
+                <TableCell>Participant</TableCell>
+                <TableCell align="center">Amount Correct </TableCell>
+                <TableCell align="center">Time do exam</TableCell>
+                <TableCell align="center">Date</TableCell>
+                {role && <TableCell />}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {results
+                .slice(
+                  pagination.page * pagination.rowsPerPage,
+                  pagination.page * pagination.rowsPerPage +
+                    pagination.rowsPerPage,
+                )
+                .map((row, index) => (
+                  <TableRow
+                    key={row.id}
+                    className={classes.row}
+                    classes={{
+                      root: row.id === resultId && classes.active,
+                    }}
+                  >
+                    <TableCell align="center">
+                      {pagination.page * pagination.rowsPerPage + index + 1}
+                    </TableCell>
+                    <TableCell>
+                      <Box display="flex" alignItems="center">
+                        <Avatar
+                          alt="avatar"
+                          src={row.participant.avatar}
+                          style={{
+                            height: '25px',
+                            width: '25px',
+                            marginRight: '3px',
+                          }}
+                        />
+                        {row.participant.name}
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center">
+                      {row.amountCorrectQuestion}
+                    </TableCell>
+                    <TableCell align="center">{row.doTime}</TableCell>
+                    <TableCell align="center">
+                      {moment(row.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
+                    </TableCell>
+                    {role && (
+                      <TableCell align="center">
+                        <Button variant="outlined" color="primary">
+                          Chi tiết
+                        </Button>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {results.length > pagination.rowsPerPage && (
+          <TablePagination
+            component="div"
+            rowsPerPageOptions={[pagination.rowsPerPage]}
+            count={pagination.count}
+            page={pagination.page}
+            onChangePage={handleChangePage}
+            rowsPerPage={pagination.rowsPerPage}
+          />
+        )}
+      </Box>
+      <Box mt={2}>
+        <div id="graph-summary-contest" />
+      </Box>
     </>
   );
 };

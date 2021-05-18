@@ -12,4 +12,7 @@ export default makeStyles((theme) => ({
     },
     cursor: 'pointer',
   },
+  active: {
+    background: '#f6a61f',
+  },
 }));

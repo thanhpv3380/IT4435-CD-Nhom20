@@ -77,9 +77,12 @@ export async function verifyPassword({ id, password }) {
   return res;
 }
 
-export async function getQuestions(id) {
+export async function getQuestions({ id, token }) {
   const res = await api({
     method: 'GET',
+    headers: {
+      'contest-token': token || null,
+    },
     url: `/contests/${id}/getAllQuestion`,
   });
   return res;
@@ -106,6 +109,14 @@ export async function getResultByUserInContest(id) {
   const res = await api({
     method: 'GET',
     url: `/contests/${id}/results/user`,
+  });
+  return res;
+}
+
+export async function checkAccountRole({ contestId, userId }) {
+  const res = await api({
+    method: 'GET',
+    url: `/contests/${contestId}/role/${userId}`,
   });
   return res;
 }

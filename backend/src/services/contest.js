@@ -6,6 +6,7 @@ const resultDao = require('../daos/result');
 const questionDao = require('../daos/question');
 const { checkDate } = require('../utils/date');
 const constants = require('../constants');
+const { generateAccessToken } = require('../utils/auth');
 
 const findAllContest = async ({ sort, fields }) => {
   const { data, metadata } = await contestDao.findAllContest({
@@ -48,6 +49,14 @@ const findAllContestByUser = async ({ userId, sort, fields }) => {
     query: { createdBy: userId },
   });
   return { data, metadata };
+};
+
+const checkPasswordInContest = async (id) => {
+  const contest = await contestDao.findContest({ _id: id });
+  if (!contest) {
+    throw new CustomError(errorCodes.NOT_FOUND);
+  }
+  return contest;
 };
 
 const findContestById = async ({ id }) => {
@@ -127,6 +136,8 @@ const verifyPassword = async ({ id, password }) => {
   if (!contest) {
     throw new CustomError(errorCodes.NOT_FOUND);
   }
+  const contestToken = await generateAccessToken(password);
+  return contestToken;
 };
 
 const getAllQuestion = async (id) => {
@@ -153,6 +164,17 @@ const getAllQuestion = async (id) => {
   return contest;
 };
 
+const checkAccountRole = async ({ contestId, userId }) => {
+  const contest = await contestDao.findContest({
+    _id: contestId,
+    createdBy: userId,
+  });
+  if (!contest) {
+    throw new CustomError(errorCodes.NOT_FOUND);
+  }
+  return constants.ACCOUNT_ROLE_OWNER;
+};
+
 module.exports = {
   findAllContest,
   findAllContestJoined,
@@ -163,4 +185,6 @@ module.exports = {
   deleteContest,
   verifyPassword,
   getAllQuestion,
+  checkAccountRole,
+  checkPasswordInContest,
 };

@@ -3,8 +3,13 @@ const asyncMiddleware = require('../middlewares/async');
 const { auth } = require('../middlewares/auth');
 const omitReq = require('../middlewares/omitReq');
 const contestController = require('../controllers/contest');
+const { checkPassword } = require('../middlewares/contest');
 
 router.get('/contests', asyncMiddleware(contestController.getAllContest));
+router.get(
+  '/contests/:contestId/role/:userId',
+  asyncMiddleware(contestController.checkAccountRole),
+);
 router.get(
   '/contests/joined',
   auth,
@@ -44,6 +49,7 @@ router.post(
 router.get(
   '/contests/:id/getAllQuestion',
   auth,
+  checkPassword,
   asyncMiddleware(contestController.getAllQuestion),
 );
 router.post(

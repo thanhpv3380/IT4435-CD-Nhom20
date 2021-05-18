@@ -48,6 +48,17 @@ export function countTime(date) {
   return `${day} day ${hour}h ${minute}m`;
 }
 
+export function renderClockTime(time) {
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor((time - hours * 3600) / 60);
+  const seconds = Math.floor(time - hours * 3600 - minutes * 60);
+
+  const hoursString = `0${hours}`.slice(-2);
+  const minutesString = `0${minutes}`.slice(-2);
+  const secondsString = `0${seconds}`.slice(-2);
+  return `${hoursString}:${minutesString}:${secondsString}`;
+}
+
 export function checkDate(el) {
   const date = new Date();
   const startTime = new Date(el.startTime);

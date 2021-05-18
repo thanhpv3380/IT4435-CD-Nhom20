@@ -57,7 +57,6 @@ const Home = () => {
   }, []);
 
   const handleChangeTab = async (event, newValue) => {
-    console.log(newValue);
     setTab(newValue);
     const date = new Date();
     if (newValue === 0) {

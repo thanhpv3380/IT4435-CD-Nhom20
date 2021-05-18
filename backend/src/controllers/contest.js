@@ -86,8 +86,8 @@ const deleteContest = async (req, res) => {
 const verifyPassword = async (req, res) => {
   const { id } = req.params;
   const { password } = req.body;
-  await contestService.verifyPassword({ id, password });
-  return res.send({ status: 1 });
+  const contestToken = await contestService.verifyPassword({ id, password });
+  return res.send({ status: 1, result: { contestToken } });
 };
 
 const getAllQuestion = async (req, res) => {
@@ -129,6 +129,12 @@ const getAllResultByUserInContest = async (req, res) => {
   return res.send({ status: 1, result: { data, metadata } });
 };
 
+const checkAccountRole = async (req, res) => {
+  const { contestId, userId } = req.params;
+  const role = await contestService.checkAccountRole({ contestId, userId });
+  return res.send({ status: 1, result: { role } });
+};
+
 module.exports = {
   getAllContest,
   getAllContestJoined,
@@ -142,4 +148,5 @@ module.exports = {
   mark,
   getAllResultByContest,
   getAllResultByUserInContest,
+  checkAccountRole,
 };

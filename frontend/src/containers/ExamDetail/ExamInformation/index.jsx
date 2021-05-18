@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack';
 import { useHistory } from 'react-router-dom';
-import { Paper, Typography, Box, TextField, Button } from '@material-ui/core';
+import { Typography, Box, TextField, Button } from '@material-ui/core';
 import {
   Description as DescriptionIcon,
   HourglassEmpty as HourglassEmptyIcon,
@@ -23,15 +23,16 @@ const PrepareExam = ({ examId }) => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleRedirectToExamTest = () => {
-    history.push(`/contest/${examId}/exam/test`);
+  const handleRedirectToExamTest = (contestToken) => {
+    history.push(`/contest/${examId}/exam/test?token=${contestToken}`);
   };
 
   const handleCheckPassword = async () => {
     try {
-      const data = await apis.contest.verifyPassword({ examId, password });
+      const data = await apis.contest.verifyPassword({ id: examId, password });
       if (data.status) {
-        handleRedirectToExamTest();
+        const { contestToken } = data.result;
+        handleRedirectToExamTest(contestToken);
       } else {
         enqueueSnackbar(data.message || 'Check password failed', {
           variant: 'error',
@@ -45,22 +46,16 @@ const PrepareExam = ({ examId }) => {
   };
 
   const fetchContest = async () => {
-    try {
-      const data = await apis.contest.getContest(examId);
-      if (data.status) {
-        const { contest: contestData } = data.result;
-        setContest(contestData);
-        setIsLoading(false);
-      } else {
-        if (data.code === errorCodes.CONTEST_IS_PRIVATE) {
-          history.push('/');
-        }
-        enqueueSnackbar(data.message || 'Fetch data failed', {
-          variant: 'error',
-        });
+    const data = await apis.contest.getContest(examId);
+    if (data && data.status) {
+      const { contest: contestData } = data.result;
+      setContest(contestData);
+      setIsLoading(false);
+    } else {
+      if (data && data.code === errorCodes.CONTEST_IS_PRIVATE) {
+        history.push('/');
       }
-    } catch (error) {
-      enqueueSnackbar('Fetch data failed', {
+      enqueueSnackbar((data && data.message) || 'Fetch data failed', {
         variant: 'error',
       });
     }
@@ -87,7 +82,7 @@ const PrepareExam = ({ examId }) => {
             <TextField
               size="small"
               id="outlined-basic"
-              label="Outlined"
+              label="Password"
               variant="outlined"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -134,7 +129,7 @@ const PrepareExam = ({ examId }) => {
 
   return (
     <>
-      <Paper className={classes.paper}>
+      <Box className={classes.paper}>
         <Typography variant="h5" gutterBottom>
           {contest && contest.title}
         </Typography>
@@ -152,7 +147,7 @@ const PrepareExam = ({ examId }) => {
         </Box>
 
         {renderByStatus()}
-      </Paper>
+      </Box>
     </>
   );
 };

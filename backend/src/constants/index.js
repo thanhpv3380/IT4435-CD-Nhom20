@@ -3,4 +3,6 @@ module.exports = {
   UPCOMING: 0,
   HAPPENING: 1,
   ENDED: 2,
+  ACCOUNT_ROLE_OWNER: 'OWNER',
+  ACCOUNT_ROLE_EDITOR: 'EDITOR',
 };

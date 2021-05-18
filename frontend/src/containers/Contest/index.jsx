@@ -3,6 +3,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/core/styles';
 import { green } from '@material-ui/core/colors';
@@ -19,7 +20,6 @@ import {
   Paper,
   IconButton,
   TablePagination,
-  FormControlLabel,
   Checkbox,
 } from '@material-ui/core';
 import {
@@ -35,6 +35,7 @@ import apis from '../../apis';
 const Contest = () => {
   const { t } = useTranslation();
   const classes = useStyles();
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [openModal, setOpenModal] = useState(false);
   const [keySearch, setKeySearch] = useState('');
@@ -191,6 +192,7 @@ const Contest = () => {
                 <TableCell align="center">Password</TableCell>
                 <TableCell align="center">Active</TableCell>
                 <TableCell />
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -210,6 +212,7 @@ const Contest = () => {
                     <TableCell align="center">
                       {pagination.page * pagination.rowsPerPage + index + 1}
                     </TableCell>
+
                     <TableCell>{row.title}</TableCell>
                     <TableCell align="center">{row.examTime}</TableCell>
                     <TableCell>
@@ -241,6 +244,17 @@ const Contest = () => {
                           <DeleteIcon />
                         </IconButton>
                       </Box>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        color="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          history.push(`/contest/${row.id}/exam/detail`);
+                        }}
+                      >
+                        Chi tiết
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

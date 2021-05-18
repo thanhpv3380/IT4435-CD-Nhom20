@@ -40,7 +40,6 @@ const ContestModal = ({
   const { enqueueSnackbar } = useSnackbar();
   const [contest, setContest] = useState();
 
-  console.log(contest);
   const handleDateChange = (type) => (date) => {
     let startTime = contest && contest.startTime;
     let endTime = contest && contest.endTime;
@@ -131,7 +130,6 @@ const ContestModal = ({
     e.preventDefault();
     let data = null;
     if (!validateContest(contest)) return;
-    console.log(contest);
 
     const contestData = {
       ...contest,
