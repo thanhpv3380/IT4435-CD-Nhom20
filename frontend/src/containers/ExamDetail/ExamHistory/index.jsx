@@ -10,6 +10,7 @@ import {
   TableBody,
   Paper,
   Button,
+  Typography,
   TablePagination,
 } from '@material-ui/core';
 import apis from '../../../apis';
@@ -56,13 +57,14 @@ const ExamHistory = ({ examId }) => {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="center">No.</TableCell>
-              <TableCell align="center">Amount Correct </TableCell>
-              <TableCell align="center">Time do exam</TableCell>
-              <TableCell align="center">Date</TableCell>
+              <TableCell align="center">Lần</TableCell>
+              <TableCell align="center">Số câu đúng </TableCell>
+              <TableCell align="center">Thời gian(s)</TableCell>
+              <TableCell align="center">Ngày</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
+
           <TableBody>
             {results
               .slice(
@@ -78,18 +80,30 @@ const ExamHistory = ({ examId }) => {
                   </TableCell>
                   <TableCell align="center">{row.doTime}</TableCell>
                   <TableCell align="center">
-                    {moment(row.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
+                    {moment(row.createdAt).format('L')}
                   </TableCell>
 
                   <TableCell className={classes.actionBox}>
                     <Button variant="contained" color="primary">
-                      Chi tiết
+                      Xem
                     </Button>
                   </TableCell>
                 </TableRow>
               ))}
           </TableBody>
         </Table>
+        {results.length <= 0 && (
+          <Typography
+            style={{
+              width: '100%',
+              padding: 10,
+              textAlign: 'center',
+              color: '#ccc',
+            }}
+          >
+            Không có dữ liệu
+          </Typography>
+        )}
       </TableContainer>
       {results.length > pagination.rowsPerPage && (
         <TablePagination

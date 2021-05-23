@@ -77,7 +77,7 @@ const PrepareExam = ({ examId }) => {
   const renderHappeningStatus = () => {
     return (
       <Box>
-        <Box>
+        <Box display="flex" mt={2}>
           {contest.isLock && (
             <TextField
               size="small"
@@ -90,9 +90,10 @@ const PrepareExam = ({ examId }) => {
           )}
 
           <Button
+            style={{ marginLeft: 3 }}
             variant="contained"
             color="primary"
-            size="large"
+            size="medium"
             onClick={
               contest.isLock ? handleCheckPassword : handleRedirectToExamTest
             }
@@ -130,19 +131,17 @@ const PrepareExam = ({ examId }) => {
   return (
     <>
       <Box className={classes.paper}>
-        <Typography variant="h5" gutterBottom>
-          {contest && contest.title}
+        <Typography variant="subtitle1" gutterBottom>
+          Tên: {contest && contest.title}
         </Typography>
         <Box display="flex">
-          <DescriptionIcon />
-          <Typography variant="h6" gutterBottom>
-            Description: {contest && contest.description}
+          <Typography variant="subtitle1" gutterBottom>
+            Mô tả: {(contest && contest.description) || '[Empty]'}
           </Typography>
         </Box>
         <Box display="flex">
-          <HourglassEmptyIcon />
-          <Typography variant="h6" gutterBottom>
-            Duration: {contest && contest.examTime}(m)
+          <Typography variant="subtitle1" gutterBottom>
+            Thời gian: {contest && contest.examTime}(m)
           </Typography>
         </Box>
 

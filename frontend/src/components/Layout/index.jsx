@@ -20,6 +20,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Breadcrumbs,
 } from '@material-ui/core';
 
 import {
@@ -107,6 +108,7 @@ const Layout = ({ children }) => {
           >
             <MenuIcon />
           </IconButton>
+          <Avatar src="https://res.cloudinary.com/dfbongzx0/image/upload/v1621772719/bfvfvstmneai0d1z0byx.png" />
           <Typography
             component="h1"
             variant="h6"

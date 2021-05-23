@@ -9,7 +9,6 @@ import {
   CardHeader,
   Avatar,
   Typography,
-  IconButton,
   CardMedia,
   CardContent,
   CardActions,
@@ -18,7 +17,6 @@ import {
 } from '@material-ui/core';
 import { AccessTime as AccessTimeIcon } from '@material-ui/icons';
 import useStyles from './index.style';
-import { checkDate } from '../../../utils/date';
 
 const TabDetail = ({ item }) => {
   const { t } = useTranslation();
@@ -66,29 +64,39 @@ const TabDetail = ({ item }) => {
           }
           title={item.title}
         />
-        <CardContent>
+        {/* <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
-            Description: {item.description}
+            Description:{' '}
+            {item.description && item.description.length > 0
+              ? item.description
+              : `[Empty]`}
           </Typography>
-        </CardContent>
+        </CardContent> */}
         <CardActions>
-          <Grid container spacing={3}>
-            <Grid item xs={8}>
-              <Box display="flex" alignItems="center">
-                <AccessTimeIcon color="secondary" fontSize="small" />
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {checkDate(item)}
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={4}>
-              <Box display="flex" justifyContent="flex-end">
-                <Button color="primary" onClick={handleJoin}>
-                  Join
-                </Button>
-              </Box>
-            </Grid>
-          </Grid>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            style={{
+              width: '100%',
+            }}
+          >
+            <Box display="flex" alignItems="center">
+              <AccessTimeIcon
+                style={{ marginRight: '5px' }}
+                color="secondary"
+                fontSize="small"
+              />
+              <Typography variant="body2" color="textSecondary" component="p">
+                {item && moment(item.startDate).format('lll')}
+              </Typography>
+            </Box>
+            <Box display="flex" justifyContent="flex-end">
+              <Button variant="outlined" color="primary" onClick={handleJoin}>
+                Join
+              </Button>
+            </Box>
+          </Box>
         </CardActions>
       </Card>
     </Grid>

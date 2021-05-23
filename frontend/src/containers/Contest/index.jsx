@@ -21,6 +21,7 @@ import {
   IconButton,
   TablePagination,
   Checkbox,
+  Tooltip,
 } from '@material-ui/core';
 import {
   Add as AddIcon,
@@ -213,18 +214,28 @@ const Contest = () => {
                       {pagination.page * pagination.rowsPerPage + index + 1}
                     </TableCell>
 
-                    <TableCell>{row.title}</TableCell>
+                    <TableCell
+                      style={{
+                        maxWidth: 300,
+                      }}
+                    >
+                      {row.title}
+                    </TableCell>
                     <TableCell align="center">{row.examTime}</TableCell>
                     <TableCell>
-                      {moment(row.startTime).format('LLL')} -{' '}
-                      {(row.endTime && moment(row.endTime).format('LLL')) || ''}
+                      <Box display="flex" flexDirection="column">
+                        <div> {moment(row.startTime).format('LLL')}</div>
+                        <div>
+                          {(row.endTime && moment(row.endTime).format('LLL')) ||
+                            ''}
+                        </div>
+                      </Box>
                     </TableCell>
-                    <TableCell>
+                    <TableCell align="center">
                       {row.password && (
-                        <Box>
+                        <Tooltip title={row.password}>
                           <LockIcon />
-                          {row.password}
-                        </Box>
+                        </Tooltip>
                       )}
                     </TableCell>
                     <TableCell align="center">
@@ -253,7 +264,7 @@ const Contest = () => {
                           history.push(`/contest/${row.id}/exam/detail`);
                         }}
                       >
-                        Chi tiết
+                        Thống kê
                       </Button>
                     </TableCell>
                   </TableRow>

@@ -17,6 +17,8 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  FormControlLabel,
+  Checkbox,
 } from '@material-ui/core';
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -155,6 +157,23 @@ const ContestModal = ({
     }
   };
 
+  const handleUploadImage = async (e) => {
+    const formData = new FormData();
+    const file = e.target.files[0];
+    formData.append('file', file);
+    const data = await apis.upload.uploadFile({ formData });
+    if (data && data.status) {
+      setContest({
+        ...contest,
+        imageUrl: data.result.link,
+      });
+    } else {
+      enqueueSnackbar('Upload failed', {
+        variant: 'error',
+      });
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -191,47 +210,52 @@ const ContestModal = ({
           />
         </Box>
         <Box mb={2}>
-          <Grid container spacing={3}>
-            <Grid item xs={4}>
-              <TextField
-                fullWidth
-                label="Exam Time"
-                variant="outlined"
-                name="examTime"
-                value={(contest && contest.examTime) || ''}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={6}>
+          <TextField
+            fullWidth
+            label="Exam Time"
+            variant="outlined"
+            name="examTime"
+            value={(contest && contest.examTime) || ''}
+            onChange={handleChange}
+          />
+        </Box>
+        <Box>
+          <Grid container spacing={2}>
+            <Grid item xs={2}>
               <input
                 accept="image/*"
                 className={classes.input}
                 id="contained-button-file"
-                multiple
                 type="file"
+                onChange={handleUploadImage}
               />
               <label htmlFor="contained-button-file">
                 <Button
-                  variant="outlined"
-                  color="primary"
+                  size="small"
+                  variant="contained"
                   component="span"
                   fullWidth
+                  style={{
+                    height: '100%',
+                  }}
                 >
-                  Upload thumbnail contest
+                  UPLOAD
                 </Button>
               </label>
             </Grid>
-            <Grid item xs={2}>
-              <Switch
-                color="primary"
-                name="isActive"
-                inputProps={{ 'aria-label': 'primary checkbox' }}
-                checked={(contest && contest.isActive) || false}
+            <Grid item xs={10}>
+              <TextField
+                fullWidth
+                label="Thumbnail"
+                variant="outlined"
+                name="imageUrl"
+                value={(contest && contest.imageUrl) || ''}
                 onChange={handleChange}
               />
             </Grid>
           </Grid>
         </Box>
+
         <Box>
           <Grid container spacing={2}>
             <Grid item xs={6}>
@@ -334,6 +358,19 @@ const ContestModal = ({
             name="password"
             value={(contest && contest.password) || ''}
             onChange={handleChange}
+          />
+        </Box>
+        <Box mb={2}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={(contest && contest.isActive) || false}
+                onChange={handleChange}
+                name="isActive"
+                color="primary"
+              />
+            }
+            label="Contest is going to public"
           />
         </Box>
         <Box display="flex" justifyContent="flex-end">

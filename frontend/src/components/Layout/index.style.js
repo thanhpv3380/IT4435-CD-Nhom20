@@ -39,6 +39,8 @@ export default makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    textTransform: 'uppercase',
+    marginLeft: 2,
   },
   drawerPaper: {
     position: 'relative',

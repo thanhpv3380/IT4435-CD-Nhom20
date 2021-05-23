@@ -13,6 +13,7 @@ import {
   Avatar,
   TablePagination,
   Button,
+  Typography,
 } from '@material-ui/core';
 import Highcharts from 'highcharts';
 import useStyles from './index.style';
@@ -145,13 +146,14 @@ const ExamDetail = ({ examId, role, resultId }) => {
             <TableHead>
               <TableRow>
                 <TableCell align="center">No.</TableCell>
-                <TableCell>Participant</TableCell>
-                <TableCell align="center">Amount Correct </TableCell>
-                <TableCell align="center">Time do exam</TableCell>
-                <TableCell align="center">Date</TableCell>
+                <TableCell>Tên</TableCell>
+                <TableCell align="center">Số câu đúng</TableCell>
+                <TableCell align="center">Thời gian</TableCell>
+                <TableCell align="center">Ngày</TableCell>
                 {role && <TableCell />}
               </TableRow>
             </TableHead>
+
             <TableBody>
               {results
                 .slice(
@@ -189,7 +191,7 @@ const ExamDetail = ({ examId, role, resultId }) => {
                     </TableCell>
                     <TableCell align="center">{row.doTime}</TableCell>
                     <TableCell align="center">
-                      {moment(row.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
+                      {moment(row.createdAt).format('LLL')}
                     </TableCell>
                     {role && (
                       <TableCell align="center">
@@ -202,6 +204,18 @@ const ExamDetail = ({ examId, role, resultId }) => {
                 ))}
             </TableBody>
           </Table>
+          {results.length <= 0 && (
+            <Typography
+              style={{
+                width: '100%',
+                padding: 10,
+                textAlign: 'center',
+                color: '#ccc',
+              }}
+            >
+              Không có dữ liệu
+            </Typography>
+          )}
         </TableContainer>
         {results.length > pagination.rowsPerPage && (
           <TablePagination
@@ -215,6 +229,9 @@ const ExamDetail = ({ examId, role, resultId }) => {
         )}
       </Box>
       <Box mt={2}>
+        <Typography variant="h6" gutterBottom>
+          Biều đồ
+        </Typography>
         <div id="graph-summary-contest" />
       </Box>
     </>

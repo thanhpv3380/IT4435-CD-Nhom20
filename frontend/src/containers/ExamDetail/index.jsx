@@ -44,7 +44,7 @@ const ExamDetail = () => {
       <Grid container spacing={3}>
         {!role && (
           <>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <Paper className={classes.paper}>
                 <Box>
                   <Typography variant="h6" gutterBottom>
@@ -54,9 +54,9 @@ const ExamDetail = () => {
                 </Box>
               </Paper>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={8}>
               <Paper className={classes.paper}>
-                <Box>
+                <Box style={{ minHeight: '230px' }}>
                   <Typography variant="h6" gutterBottom>
                     Lịch sử làm bài
                   </Typography>

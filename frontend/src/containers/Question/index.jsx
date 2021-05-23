@@ -235,7 +235,7 @@ const Question = () => {
               <Button
                 size="large"
                 variant="contained"
-                color="secondary"
+                style={{ color: '#fff', background: 'green' }}
                 component="span"
                 startIcon={<BackupIcon />}
               >
