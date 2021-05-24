@@ -74,8 +74,7 @@ const Login = () => {
     return true;
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
     if (!validateLogin()) return;
     dispatch(actions.auth.login(loginType.LOGIN, { email, password }));
   };
@@ -143,7 +142,10 @@ const Login = () => {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={handleLogin}
+              onClick={(e) => {
+                e.preventDefault();
+                handleLogin();
+              }}
             >
               Sign In
             </Button>
@@ -174,9 +176,12 @@ const Login = () => {
                       className={classes.submit}
                       startIcon={
                         <Avatar
-                          sizes="height: 20px"
+                          style={{
+                            height: '20px',
+                            width: '20px',
+                          }}
                           variant="square"
-                          src="https://www.flaticon.com/svg/vstatic/svg/281/281764.svg?token=exp=1617453904~hmac=aa464508b624fc30774281f816a61a99"
+                          src="https://res.cloudinary.com/dfbongzx0/image/upload/v1621771943/m33izryay4mzslavxmyk.png"
                         />
                       }
                       onClick={renderProps.onClick}
@@ -204,8 +209,12 @@ const Login = () => {
                       className={classes.submit}
                       startIcon={
                         <Avatar
+                          style={{
+                            height: '20px',
+                            width: '20px',
+                          }}
                           variant="square"
-                          src="https://www.flaticon.com/svg/vstatic/svg/1384/1384053.svg?token=exp=1617453959~hmac=2da46b5dbf3d480fc8b4628952a711b5"
+                          src="https://res.cloudinary.com/dfbongzx0/image/upload/v1621771959/idn7xi1tw5blhrj8zoxk.png"
                         />
                       }
                       onClick={renderProps.onClick}

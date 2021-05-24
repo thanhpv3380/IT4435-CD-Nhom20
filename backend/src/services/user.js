@@ -15,18 +15,21 @@ const updateUser = async (userId, data) => {
 const verifyPassword = async (userId, password) => {
   const user = await userDao.findUser(userId);
   if (!user) throw new CustomError(errorCodes.USER_NOT_FOUND);
-
-  const isCorrectPassword = await comparePassword(password, user.password);
-  if (!isCorrectPassword) throw new CustomError(errorCodes.WRONG_PASSWORD);
+  if (user.password) {
+    const isCorrectPassword = await comparePassword(password, user.password);
+    if (!isCorrectPassword) throw new CustomError(errorCodes.WRONG_PASSWORD);
+  }
 };
 
-const updatePassword = async (userId, password) => {
-  const userExist = await userDao.findUser(userId);
-  if (!userExist) throw new CustomError(errorCodes.USER_NOT_FOUND);
+const updatePassword = async (userId, data) => {
+  const { currentPassword, newPassword } = data;
+  await verifyPassword(userId, currentPassword);
 
-  password = await generatePassword(password);
+  const newGeneratePassword = await generatePassword(newPassword);
 
-  const user = await userDao.updateUser(userId, { password });
+  const user = await userDao.updateUser(userId, {
+    password: newGeneratePassword,
+  });
   return user;
 };
 

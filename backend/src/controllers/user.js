@@ -7,4 +7,11 @@ const updateUser = async (req, res) => {
   return res.send({ status: 1, result: { user: userInfo } });
 };
 
-module.exports = { updateUser };
+const changePassword = async (req, res) => {
+  const data = req.body;
+  const { user } = req;
+  await userService.updatePassword(user._id, data);
+  return res.send({ status: 1 });
+};
+
+module.exports = { updateUser, changePassword };
