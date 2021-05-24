@@ -65,7 +65,7 @@ const ChangePassword = () => {
     <Paper className={classes.paper} variant={3}>
       <Box textAlign="center" mb={3}>
         <Typography variant="h4" component="h2">
-          Update Password
+          Thay đổi mật khẩu
         </Typography>
       </Box>
       <Box textAlign="center" mb={3}>
@@ -73,7 +73,7 @@ const ChangePassword = () => {
           required
           type="password"
           name="currentPassword"
-          label="Current password"
+          label="Mật khẩu hiện tại"
           variant="outlined"
           fullWidth
           value={password.currentPassword}
@@ -85,7 +85,7 @@ const ChangePassword = () => {
           required
           type="password"
           name="newPassword"
-          label="New password"
+          label="Mật khẩu mới"
           variant="outlined"
           fullWidth
           value={password.newPassword}
@@ -97,7 +97,7 @@ const ChangePassword = () => {
           required
           type="password"
           name="confirmNewPassword"
-          label="Confirm new password"
+          label="Xác nhận lại mật khẩu"
           variant="outlined"
           fullWidth
           value={password.confirmNewPassword}
@@ -112,7 +112,7 @@ const ChangePassword = () => {
           size="large"
           onClick={handleSave}
         >
-          Change Password
+          Lưu mật khẩu
         </Button>
       </Box>
     </Paper>

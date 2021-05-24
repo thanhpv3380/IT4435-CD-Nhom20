@@ -9,12 +9,12 @@ import {
   TableCell,
   TableBody,
   Paper,
-  Button,
   Typography,
   TablePagination,
 } from '@material-ui/core';
 import apis from '../../../apis';
 import useStyles from './index.style';
+import { renderClockTime } from '../../../utils/date';
 
 const ExamHistory = ({ examId }) => {
   const classes = useStyles();
@@ -59,9 +59,8 @@ const ExamHistory = ({ examId }) => {
             <TableRow>
               <TableCell align="center">Lần</TableCell>
               <TableCell align="center">Số câu đúng </TableCell>
-              <TableCell align="center">Thời gian(s)</TableCell>
+              <TableCell align="center">Thời gian(m)</TableCell>
               <TableCell align="center">Ngày</TableCell>
-              <TableCell />
             </TableRow>
           </TableHead>
 
@@ -78,15 +77,11 @@ const ExamHistory = ({ examId }) => {
                   <TableCell align="center">
                     {row.amountCorrectQuestion}
                   </TableCell>
-                  <TableCell align="center">{row.doTime}</TableCell>
+                  <TableCell align="center">
+                    {renderClockTime(row.doTime)}
+                  </TableCell>
                   <TableCell align="center">
                     {moment(row.createdAt).format('L')}
-                  </TableCell>
-
-                  <TableCell className={classes.actionBox}>
-                    <Button variant="contained" color="primary">
-                      Xem
-                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

@@ -22,6 +22,7 @@ import {
   TablePagination,
   Checkbox,
   Tooltip,
+  Typography,
 } from '@material-ui/core';
 import {
   Add as AddIcon,
@@ -157,6 +158,11 @@ const Contest = () => {
 
   return (
     <div>
+      <Box mb={1}>
+        <Typography variant="h6" gutterBottom>
+          Danh sách cuộc thi
+        </Typography>
+      </Box>
       <Box
         display="flex"
         alignItems="center"
@@ -176,7 +182,7 @@ const Contest = () => {
               startIcon={<AddIcon />}
               onClick={handleOpenModalAdd}
             >
-              Add Contest
+              Thêm cuộc thi
             </Button>
           </Box>
         </Box>
@@ -186,12 +192,12 @@ const Contest = () => {
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">No.</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell align="center">Duration(min)</TableCell>
-                <TableCell align="center">Date</TableCell>
-                <TableCell align="center">Password</TableCell>
-                <TableCell align="center">Active</TableCell>
+                <TableCell align="center">STT</TableCell>
+                <TableCell>Tên cuộc thi</TableCell>
+                <TableCell align="center">Thời gian(phút)</TableCell>
+                <TableCell align="center">Ngày</TableCell>
+                <TableCell align="center">Mã code</TableCell>
+                <TableCell align="center">Trạng thái</TableCell>
                 <TableCell />
                 <TableCell />
               </TableRow>
@@ -216,7 +222,7 @@ const Contest = () => {
 
                     <TableCell
                       style={{
-                        maxWidth: 300,
+                        maxWidth: 200,
                       }}
                     >
                       {row.title}
@@ -224,8 +230,9 @@ const Contest = () => {
                     <TableCell align="center">{row.examTime}</TableCell>
                     <TableCell>
                       <Box display="flex" flexDirection="column">
-                        <div> {moment(row.startTime).format('LLL')}</div>
+                        <div> BD: {moment(row.startTime).format('LLL')}</div>
                         <div>
+                          KT:{' '}
                           {(row.endTime && moment(row.endTime).format('LLL')) ||
                             ''}
                         </div>
@@ -240,7 +247,16 @@ const Contest = () => {
                     </TableCell>
                     <TableCell align="center">
                       {row.isActive && (
-                        <GreenCheckbox checked="true" name="isActive" />
+                        <Box
+                          style={{
+                            color: '#000',
+                            background: '#7beeab',
+                            borderRadius: 5,
+                            padding: 5,
+                          }}
+                        >
+                          active
+                        </Box>
                       )}
                     </TableCell>
                     <TableCell>

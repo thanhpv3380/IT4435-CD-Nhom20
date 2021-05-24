@@ -50,11 +50,11 @@ const TabDetail = ({ item }) => {
                 marginTop: '20px',
               }}
             >
-              {item.examTime} min
+              {item.examTime} phút
             </Typography>
           }
           title={item.title}
-          subheader={`Creator: ${item.createdBy.name}`}
+          subheader={`Tạo bởi: ${item.createdBy.name}`}
         />
         <CardMedia
           className={classes.media}
@@ -88,12 +88,12 @@ const TabDetail = ({ item }) => {
                 fontSize="small"
               />
               <Typography variant="body2" color="textSecondary" component="p">
-                {item && moment(item.startDate).format('lll')}
+                {item && moment(item.startTime).format('lll')}
               </Typography>
             </Box>
             <Box display="flex" justifyContent="flex-end">
               <Button variant="outlined" color="primary" onClick={handleJoin}>
-                Join
+                Tham gia
               </Button>
             </Box>
           </Box>

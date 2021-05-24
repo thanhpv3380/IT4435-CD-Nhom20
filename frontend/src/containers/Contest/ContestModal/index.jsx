@@ -184,13 +184,13 @@ const ContestModal = ({
       <div className={classes.paper}>
         <Box mb={3}>
           <Typography variant="h6" gutterBottom>
-            Contest
+            Thông tin cuộc thi
           </Typography>
         </Box>
         <Box mb={2}>
           <TextField
             fullWidth
-            label="Title"
+            label="Tên cuộc thi"
             variant="outlined"
             name="title"
             value={(contest && contest.title) || ''}
@@ -200,7 +200,7 @@ const ContestModal = ({
         <Box mb={2}>
           <TextField
             fullWidth
-            label="Description"
+            label="Mô tả chi tiết"
             variant="outlined"
             multiline
             rows={5}
@@ -212,7 +212,7 @@ const ContestModal = ({
         <Box mb={2}>
           <TextField
             fullWidth
-            label="Exam Time"
+            label="Thời gian thi(m)"
             variant="outlined"
             name="examTime"
             value={(contest && contest.examTime) || ''}
@@ -232,21 +232,22 @@ const ContestModal = ({
               <label htmlFor="contained-button-file">
                 <Button
                   size="small"
-                  variant="contained"
+                  variant="outlined"
+                  color="primary"
                   component="span"
                   fullWidth
                   style={{
                     height: '100%',
                   }}
                 >
-                  UPLOAD
+                  TẢI ẢNH
                 </Button>
               </label>
             </Grid>
             <Grid item xs={10}>
               <TextField
                 fullWidth
-                label="Thumbnail"
+                label="Link ảnh"
                 variant="outlined"
                 name="imageUrl"
                 value={(contest && contest.imageUrl) || ''}
@@ -255,31 +256,16 @@ const ContestModal = ({
             </Grid>
           </Grid>
         </Box>
-
-        <Box>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Typography
-                variant="subtitle1"
-                style={{ justifyContent: 'center' }}
-              >
-                Start time
-              </Typography>
-            </Grid>{' '}
-            <Grid item xs={6}>
-              <Typography
-                variant="subtitle1"
-                style={{ justifyContent: 'center' }}
-              >
-                End time
-              </Typography>
-            </Grid>
-          </Grid>
-        </Box>
         <Box mb={2}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <Grid container spacing={2}>
-              <Grid item xs={3}>
+              <Grid item xs={6}>
+                <Typography
+                  variant="subtitle1"
+                  style={{ justifyContent: 'center' }}
+                >
+                  Ngày bắt đầu
+                </Typography>
                 <KeyboardDatePicker
                   margin="normal"
                   inputVariant="outlined"
@@ -289,9 +275,16 @@ const ContestModal = ({
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
+                  style={{ marginTop: 0 }}
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={6}>
+                <Typography
+                  variant="subtitle1"
+                  style={{ justifyContent: 'center' }}
+                >
+                  Thời gian bắt đầu
+                </Typography>
                 <KeyboardTimePicker
                   margin="normal"
                   inputVariant="outlined"
@@ -300,10 +293,17 @@ const ContestModal = ({
                   KeyboardButtonProps={{
                     'aria-label': 'change time',
                   }}
+                  style={{ marginTop: 0 }}
                 />
               </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  variant="subtitle1"
+                  style={{ justifyContent: 'center' }}
+                >
+                  Ngày kết thúc
+                </Typography>
 
-              <Grid item xs={3}>
                 <KeyboardDatePicker
                   margin="normal"
                   inputVariant="outlined"
@@ -313,9 +313,16 @@ const ContestModal = ({
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
+                  style={{ marginTop: 0 }}
                 />
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={6}>
+                <Typography
+                  variant="subtitle1"
+                  style={{ justifyContent: 'center' }}
+                >
+                  Thời gian kết thúc
+                </Typography>
                 <KeyboardTimePicker
                   margin="normal"
                   inputVariant="outlined"
@@ -324,6 +331,7 @@ const ContestModal = ({
                   KeyboardButtonProps={{
                     'aria-label': 'change time',
                   }}
+                  style={{ marginTop: 0 }}
                 />
               </Grid>
             </Grid>
@@ -333,7 +341,7 @@ const ContestModal = ({
         <Box mb={2}>
           <FormControl variant="outlined" className={classes.formControl}>
             <InputLabel id="demo-simple-select-outlined-label">
-              Group Question
+              Bộ câu hỏi
             </InputLabel>
             <Select
               labelId="demo-simple-select-outlined-label"
@@ -353,7 +361,7 @@ const ContestModal = ({
         <Box mb={2}>
           <TextField
             fullWidth
-            label="Password (optional)"
+            label="Mã code (nếu có)"
             variant="outlined"
             name="password"
             value={(contest && contest.password) || ''}
@@ -370,7 +378,7 @@ const ContestModal = ({
                 color="primary"
               />
             }
-            label="Contest is going to public"
+            label="Cuộc thi sẽ được hiển thị lên hệ thống"
           />
         </Box>
         <Box display="flex" justifyContent="flex-end">
@@ -381,12 +389,12 @@ const ContestModal = ({
               size="large"
               onClick={handleSave}
             >
-              Save
+              Lưu
             </Button>
           </Box>
           <Box>
             <Button variant="contained" size="large" onClick={handleCloseModal}>
-              Cancel
+              Hủy bỏ
             </Button>
           </Box>
         </Box>

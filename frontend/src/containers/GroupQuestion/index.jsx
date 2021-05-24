@@ -26,6 +26,7 @@ import useStyles from './index.style';
 import apis from '../../apis';
 import GroupQuestionModal from './GroupQuestionModal';
 import SearchBox from '../../components/SearchBox';
+import LoadingPage from '../../components/LoadingPage';
 
 let timeOutId = null;
 const GroupQuestion = () => {
@@ -38,11 +39,13 @@ const GroupQuestion = () => {
   const [keySearch, setKeySearch] = useState('');
   const [groupQuestionSelected, setGroupQuestionSelected] = useState();
   const [groupQuestions, setGroupQuestions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchGroupQuestions = async (keyword) => {
     const data = await apis.groupQuestion.getGroupQuestions(keyword);
     if (data && data.status) {
       setGroupQuestions(data.result.data);
+      setIsLoading(false);
     } else {
       enqueueSnackbar((data && data.message) || 'Fetch data failed', {
         variant: 'error',
@@ -156,8 +159,17 @@ const GroupQuestion = () => {
     history.push(`/groupQuestions/${id}/questions`);
   };
 
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
   return (
     <div>
+      <Box mb={1}>
+        <Typography variant="h6" gutterBottom>
+          Danh sách bộ câu hỏi
+        </Typography>
+      </Box>
       <Box
         display="flex"
         alignItems="center"
@@ -176,13 +188,18 @@ const GroupQuestion = () => {
             startIcon={<AddIcon />}
             onClick={handleOpenModalAdd}
           >
-            Add Group Question
+            Thêm bộ câu hỏi
           </Button>
         </Box>
       </Box>
       {groupQuestions.length === 0 ? (
-        <Typography variant="subtitle1" gutterBottom align="center">
-          List Group Question Empty
+        <Typography
+          variant="subtitle1"
+          gutterBottom
+          align="center"
+          style={{ color: '#ccc' }}
+        >
+          Không có dữ liệu
         </Typography>
       ) : (
         <List>
@@ -236,8 +253,8 @@ const GroupQuestion = () => {
         open={Boolean(anchorEl)}
         onClose={handleCloseToggle}
       >
-        <MenuItem onClick={handleOpenEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete</MenuItem>
+        <MenuItem onClick={handleOpenEdit}>Sửa</MenuItem>
+        <MenuItem onClick={handleDelete}>Xóa</MenuItem>
       </Menu>
       <GroupQuestionModal
         open={openModal}

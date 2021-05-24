@@ -9,26 +9,23 @@ export default makeStyles((theme) => ({
   },
   questionBox: {
     padding: theme.spacing(5),
+  },
+  listQuestionBox: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
   },
   questionSquare: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '30px',
-    height: '30px',
-    borderRadius: theme.spacing(3),
     border: '1px solid #eee',
-    padding: theme.spacing(1),
+    width: '20px',
+    height: '20px',
     margin: '2px',
+    borderRadius: '50px',
+    padding: theme.spacing(2),
   },
   fullscreen: {
-    background: '#fff',
+    background: '#fafafa',
     zIndex: 99999,
     top: 0,
     left: 0,
@@ -39,5 +36,11 @@ export default makeStyles((theme) => ({
     whiteSpace: 'nowrap',
     position: 'fixed',
     padding: theme.spacing(8),
+  },
+  answerRow: {
+    cursor: 'pointer',
+    '&:hover': {
+      background: '#ccc',
+    },
   },
 }));

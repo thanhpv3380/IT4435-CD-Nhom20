@@ -196,15 +196,15 @@ const QuestionModal = ({
       <div className={classes.paper}>
         <Box mb={3}>
           <Typography variant="h6" gutterBottom>
-            Question
+            Thông tin câu hỏi
           </Typography>
         </Box>
         <Box mb={2}>
           <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel>Level Question</InputLabel>
+            <InputLabel>Cấp độ câu hỏi</InputLabel>
             <Select
               name="level"
-              label="Level Question"
+              label="Cấp độ câu hỏi"
               value={(question && question.level) || 'EASY'}
               onChange={handleChange}
             >
@@ -219,7 +219,7 @@ const QuestionModal = ({
         <Box mb={2}>
           <TextField
             fullWidth
-            label="Title"
+            label="Tiêu đề câu hỏi"
             variant="outlined"
             name="title"
             value={(question && question.title) || ''}
@@ -229,7 +229,7 @@ const QuestionModal = ({
         <Box mb={2}>
           <TextField
             fullWidth
-            label="Description"
+            label="Nội dung câu hỏi"
             variant="outlined"
             multiline
             rows={10}
@@ -243,7 +243,7 @@ const QuestionModal = ({
             {/* <QuestionAnswerIcon /> */}
 
             <Typography variant="h6" className={classes.textCreateAnswer}>
-              List Answer
+              Danh sách đáp án
             </Typography>
           </Box>
           <Box>
@@ -314,14 +314,14 @@ const QuestionModal = ({
               startIcon={<AddIcon />}
               onClick={handleAddAnswer}
             >
-              Add
+              Thêm
             </Button>
           </Box>
         </Box>
         <Box mb={2}>
           <TextField
             fullWidth
-            label="Explain"
+            label="Giải thích đáp án"
             variant="outlined"
             multiline
             rows={5}
@@ -338,12 +338,12 @@ const QuestionModal = ({
               size="large"
               onClick={handleSave}
             >
-              Save
+              Lưu
             </Button>
           </Box>
           <Box>
             <Button variant="contained" size="large" onClick={handleCloseModal}>
-              Cancel
+              Hủy bỏ
             </Button>
           </Box>
         </Box>

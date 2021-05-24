@@ -2,14 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useTranslation } from 'react-i18next';
-import { Paper, Tabs, Tab, Grid } from '@material-ui/core';
+import { Paper, Tabs, Tab, Grid, Box, Typography } from '@material-ui/core';
 import TabDetail from './TabDetail';
 import useStyles from './index.style';
 import apis from '../../apis';
 import LoadingPage from '../../components/LoadingPage';
 
 const menus = [
-  { id: 0, heading: 'All Contest' },
+  { id: 0, heading: 'Tất cả cuộc thi' },
   { id: 1, heading: 'Đã tham gia' },
   { id: 2, heading: 'Đang diễn ra' },
   { id: 3, heading: 'Sắp diễn ra' },
@@ -101,6 +101,11 @@ const Home = () => {
 
   return (
     <>
+      <Box mb={1}>
+        <Typography variant="h6" gutterBottom>
+          Danh sách cuộc thi
+        </Typography>
+      </Box>
       <Paper className={classes.root}>
         <Tabs
           value={tab}

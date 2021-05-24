@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-useless-return */
 /* eslint-disable consistent-return */
 import React, { useState, useEffect } from 'react';
@@ -52,9 +53,6 @@ const PrepareExam = ({ examId }) => {
       setContest(contestData);
       setIsLoading(false);
     } else {
-      if (data && data.code === errorCodes.CONTEST_IS_PRIVATE) {
-        history.push('/');
-      }
       enqueueSnackbar((data && data.message) || 'Fetch data failed', {
         variant: 'error',
       });
@@ -69,7 +67,7 @@ const PrepareExam = ({ examId }) => {
     return (
       <Box>
         <Typography variant="h6" gutterBottom>
-          Upcoming:
+          Sắp diễn ra
         </Typography>
       </Box>
     );
@@ -82,7 +80,7 @@ const PrepareExam = ({ examId }) => {
             <TextField
               size="small"
               id="outlined-basic"
-              label="Password"
+              label="Nhập code"
               variant="outlined"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -94,11 +92,13 @@ const PrepareExam = ({ examId }) => {
             variant="contained"
             color="primary"
             size="medium"
-            onClick={
-              contest.isLock ? handleCheckPassword : handleRedirectToExamTest
-            }
+            onClick={() => {
+              contest.isLock
+                ? handleCheckPassword()
+                : handleRedirectToExamTest();
+            }}
           >
-            Start
+            Thi
           </Button>
         </Box>
       </Box>
@@ -108,7 +108,7 @@ const PrepareExam = ({ examId }) => {
     return (
       <Box>
         <Typography variant="h6" gutterBottom>
-          Ended. View Detail
+          Đã kết thúc
         </Typography>
       </Box>
     );
@@ -136,7 +136,7 @@ const PrepareExam = ({ examId }) => {
         </Typography>
         <Box display="flex">
           <Typography variant="subtitle1" gutterBottom>
-            Mô tả: {(contest && contest.description) || '[Empty]'}
+            Mô tả: {(contest && contest.description) || ''}
           </Typography>
         </Box>
         <Box display="flex">

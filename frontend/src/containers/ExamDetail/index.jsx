@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useSnackbar } from 'notistack';
-import { Box, Typography, Paper, Grid } from '@material-ui/core';
+import { Box, Typography, Paper, Grid, Divider } from '@material-ui/core';
 import useStyles from './index.style';
 import ExamInformation from './ExamInformation';
 import ExamRank from './ExamRank';
@@ -50,16 +50,21 @@ const ExamDetail = () => {
                   <Typography variant="h6" gutterBottom>
                     Thông tin bài thi
                   </Typography>
+                  <Divider style={{ marginBottom: 20 }} />
                   <ExamInformation examId={id} />
                 </Box>
               </Paper>
             </Grid>
             <Grid item xs={8}>
-              <Paper className={classes.paper}>
+              <Paper
+                className={classes.paper}
+                style={{ borderLeft: '10px solid #f16a73' }}
+              >
                 <Box style={{ minHeight: '230px' }}>
                   <Typography variant="h6" gutterBottom>
                     Lịch sử làm bài
                   </Typography>
+                  <Divider style={{ marginBottom: 20 }} />
                   <ExamHistory examId={id} />
                 </Box>
               </Paper>
@@ -68,11 +73,15 @@ const ExamDetail = () => {
         )}
 
         <Grid item xs={12}>
-          <Paper className={classes.paper}>
+          <Paper
+            className={classes.paper}
+            style={{ borderLeft: '10px solid #48bb78' }}
+          >
             <Box>
               <Typography variant="h6" gutterBottom>
                 Bảng xếp hạng
               </Typography>
+              <Divider style={{ marginBottom: 20 }} />
               <ExamRank
                 examId={id}
                 role={role}

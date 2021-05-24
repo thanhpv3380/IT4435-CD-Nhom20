@@ -3,7 +3,7 @@ import { TextField, InputAdornment } from '@material-ui/core';
 import { Search as SearchIcon } from '@material-ui/icons';
 
 const SearchBox = ({
-  title = 'item',
+  title = '',
   handleSearch,
   size = 'small',
   position = 'end',
@@ -20,7 +20,7 @@ const SearchBox = ({
           </InputAdornment>
         ),
       }}
-      placeholder={`Search ${title}`}
+      placeholder={`Tìm kiếm  ${title}`}
       onChange={handleSearch}
     />
   );

@@ -10,6 +10,7 @@ import {
   Paper,
   Button,
   IconButton,
+  Avatar,
 } from '@material-ui/core';
 import { PhotoCamera as PhotoCameraIcon } from '@material-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -70,22 +71,43 @@ const User = () => {
     }
   };
 
+  const handleUploadImage = async (e) => {
+    const formData = new FormData();
+    const file = e.target.files[0];
+    formData.append('file', file);
+    const data = await apis.upload.uploadFile({ formData });
+    if (data && data.status) {
+      setUserInfo({
+        ...userInfo,
+        avatar: data.result.link,
+      });
+    } else {
+      enqueueSnackbar('Upload failed', {
+        variant: 'error',
+      });
+    }
+  };
+
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={3}>
           <Box borderRadius="50%" className={classes.avatar}>
-            <img
-              src={(userInfo && userInfo.avatar) || ''}
-              width="100%"
-              height="auto"
+            <Avatar
               alt="avatar"
+              src={(userInfo && userInfo.avatar) || ''}
+              style={{
+                width: '100%',
+                height: '200px',
+              }}
             />
+
             <input
               accept="image/*"
               className={classes.input}
               id="icon-button-file"
               type="file"
+              onChange={handleUploadImage}
             />
             <label className={classes.btnCamera} htmlFor="icon-button-file">
               <IconButton
@@ -102,7 +124,7 @@ const User = () => {
           <Paper className={classes.paper} variant={3}>
             <Box textAlign="center" mb={3}>
               <Typography variant="h4" component="h2">
-                Profile
+                Thông tin
               </Typography>
             </Box>
             <Grid container spacing={3}>
@@ -111,7 +133,7 @@ const User = () => {
                   required
                   id="name"
                   name="name"
-                  label="Name"
+                  label="Tên của bạn"
                   variant="outlined"
                   fullWidth
                   value={(userInfo && userInfo.name) || ''}
@@ -153,7 +175,7 @@ const User = () => {
                 <TextField
                   required
                   name="phoneNumber"
-                  label="Phone Number"
+                  label="Số điện thoại"
                   variant="outlined"
                   fullWidth
                   value={(userInfo && userInfo.phoneNumber) || ''}
@@ -199,7 +221,7 @@ const User = () => {
                 size="large"
                 onClick={handleSave}
               >
-                Save
+                Lưu
               </Button>
             </Box>
           </Paper>

@@ -39,22 +39,22 @@ import { setCookie } from '../../utils/cookie';
 
 const menus = [
   {
-    heading: 'Dashboard',
+    heading: 'Trang chủ',
     icon: <DashboardIcon />,
     route: routes.HOME,
   },
   {
-    heading: 'Contest',
+    heading: 'Quản lý cuộc thi',
     icon: <TimerIcon />,
     route: routes.CONTEST,
   },
   {
-    heading: 'Group Question',
+    heading: 'Quản lý câu hỏi',
     icon: <AssignmentIcon />,
     route: routes.GROUP_QUESTIONS,
   },
   {
-    heading: 'User Information',
+    heading: 'Thông tin tài khoản',
     icon: <PersonIcon />,
     route: routes.USER,
   },

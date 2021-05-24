@@ -19,14 +19,17 @@ import {
   Paper,
   IconButton,
   TablePagination,
+  Tooltip,
 } from '@material-ui/core';
 import {
   Add as AddIcon,
   Delete as DeleteIcon,
   Backup as BackupIcon,
+  InfoOutlined as InfoIcon,
 } from '@material-ui/icons';
 import SearchBox from '../../components/SearchBox';
 import QuestionModal from './QuestionModal';
+import UploadInfoModal from './UploadInfoModal';
 import useStyles from './index.style';
 import apis from '../../apis';
 
@@ -36,6 +39,7 @@ const Question = () => {
   const { id: groupQuestionId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const [openModal, setOpenModal] = useState(false);
+  const [openModalUploadInfo, setOpenModalUploadInfo] = useState(false);
   const [keySearch, setKeySearch] = useState('');
   const [questions, setQuestions] = useState([]);
   const [questionSelect, setQuestionSelect] = useState(null);
@@ -105,6 +109,15 @@ const Question = () => {
   const handleCloseModal = () => {
     setOpenModal(false);
     setQuestionSelect(null);
+  };
+
+  const handleOpenUploadInfoModal = (e) => {
+    e.preventDefault();
+    setOpenModalUploadInfo(true);
+  };
+
+  const handleCloseUploadInfoModal = () => {
+    setOpenModalUploadInfo(false);
   };
 
   const handleClickRow = (row) => (e) => {
@@ -189,7 +202,6 @@ const Question = () => {
                   isCorrect: parseInt(row[row.length - 1]) === index + 1,
                 })),
               };
-              console.log(questionData);
               await apis.question.createQuestion({
                 ...questionData,
                 groupQuestion: groupQuestionId,
@@ -222,7 +234,10 @@ const Question = () => {
           <SearchBox handleSearch={handleSearch} />
         </Box>
         <Box display="flex">
-          <Box mr={1}>
+          <Box mr={1} display="flex" alignItems="center">
+            <Box mr={1} onClick={handleOpenUploadInfoModal}>
+              <InfoIcon style={{ color: '#ccc', cursor: 'pointer' }} />
+            </Box>
             <input
               accept="*"
               className={classes.input}
@@ -232,15 +247,17 @@ const Question = () => {
               onChange={handleImportExcel}
             />
             <label htmlFor="contained-button-file">
-              <Button
-                size="large"
-                variant="contained"
-                style={{ color: '#fff', background: 'green' }}
-                component="span"
-                startIcon={<BackupIcon />}
-              >
-                Upload
-              </Button>
+              <Tooltip title="Đọc kĩ hướng dẫn ở icon bên cạnh trước khi tải lên">
+                <Button
+                  size="large"
+                  variant="contained"
+                  style={{ color: '#fff', background: 'green' }}
+                  component="span"
+                  startIcon={<BackupIcon />}
+                >
+                  Tải lên
+                </Button>
+              </Tooltip>
             </label>
           </Box>
           <Box>
@@ -252,7 +269,7 @@ const Question = () => {
               startIcon={<AddIcon />}
               onClick={handleOpenModalAdd}
             >
-              Add Question
+              Thêm câu hỏi
             </Button>
           </Box>
         </Box>
@@ -262,10 +279,10 @@ const Question = () => {
           <Table className={classes.table} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="center">No.</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Level</TableCell>
-                <TableCell align="center">Amount of Answer</TableCell>
+                <TableCell align="center">STT</TableCell>
+                <TableCell>Tiêu đề câu hỏi</TableCell>
+                <TableCell>Cấp độ</TableCell>
+                <TableCell align="center">Số lượng câu trả lời</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -331,6 +348,10 @@ const Question = () => {
         handleCloseModal={handleCloseModal}
         itemSelect={questionSelect}
         handleUpdateQuestion={handleUpdateQuestion}
+      />
+      <UploadInfoModal
+        open={openModalUploadInfo}
+        handleCloseModal={handleCloseUploadInfoModal}
       />
     </div>
   );

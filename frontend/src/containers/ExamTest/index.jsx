@@ -4,16 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
-import {
-  Paper,
-  Typography,
-  Box,
-  Grid,
-  Button,
-  RadioGroup,
-  Radio,
-  FormControlLabel,
-} from '@material-ui/core';
+import { Paper, Typography, Box, Grid, Button } from '@material-ui/core';
 import {
   Fullscreen as FullscreenIcon,
   Send as SendIcon,
@@ -28,11 +19,12 @@ import useUnsavedChangesWarning from './useUnsavedChangesWarning';
 
 let interval = null;
 
+const alphabet = 'A B C D E F G H I K L M N O P Q R S T V X Y Z';
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-const PrepareExam = () => {
+const ExamTest = () => {
   const classes = useStyles();
   const { id } = useParams();
   const history = useHistory();
@@ -49,8 +41,7 @@ const PrepareExam = () => {
   const [isMarking, setIsMarking] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const handleChangeAnswer = (e) => {
-    const { value } = e.target;
+  const handleChangeAnswer = (value) => {
     setAnswers({
       ...answers,
       [questionSelected.data.id]: value,
@@ -64,7 +55,7 @@ const PrepareExam = () => {
 
   const handleFinishExam = async () => {
     const examData = {
-      doTime: timeDoExam,
+      doTime: contest.examTime * 60 - timeDoExam,
       contestId: contest.id,
       groupQuestionId: contest.groupQuestion,
       answers,
@@ -168,37 +159,46 @@ const PrepareExam = () => {
         alignItems="center"
         mb={2}
       >
-        <Box display="flex">
+        <Box display="flex" alignItems="center">
           <Box mr={1}>
             <AccessTimeIcon />
           </Box>
-          <Typography variant="button" display="block" gutterBottom>
+          <Typography
+            variant="button"
+            display="block"
+            gutterBottom
+            style={{
+              fontWeight: 'bold',
+              fontSize: '20px',
+            }}
+          >
             {renderClockTime(timeDoExam)}
           </Typography>
         </Box>
         <Box display="flex">
           <Box mr={1}>
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
               startIcon={<SendIcon />}
               onClick={() => {
                 setIsMarking(true);
               }}
+              style={{ background: '#f16a73', color: '#fff' }}
             >
-              Finish
+              Nộp bài
             </Button>
           </Box>
           <Box>
             <Button
-              variant="outlined"
+              variant="contained"
               color="primary"
               startIcon={
                 isFullscreen ? <FullscreenExitIcon /> : <FullscreenIcon />
               }
               onClick={handleFullscreen}
             >
-              {isFullscreen ? 'Exit Full Screen' : 'Full Screen '}
+              {isFullscreen ? 'Thoát toàn màn hình' : 'Toàn màn hình '}
             </Button>
           </Box>
         </Box>
@@ -207,53 +207,78 @@ const PrepareExam = () => {
         <Grid container spacing={3}>
           <Grid item xs={8}>
             <Paper className={classes.paper}>
-              <Box>
+              <Box mb={3}>
+                <Typography gutterBottom style={{ textAlign: 'center' }}>
+                  Câu số {questionSelected && questionSelected.position + 1}
+                </Typography>
+                <Typography gutterBottom style={{ color: '#ccc' }}>
+                  {questionSelected &&
+                    questionSelected.data &&
+                    questionSelected.data.title}
+                </Typography>
                 <Typography variant="h6" gutterBottom>
-                  Câu số {questionSelected && questionSelected.position + 1}:{' '}
                   {questionSelected &&
                     questionSelected.data &&
                     questionSelected.data.description}
                 </Typography>
               </Box>
               <Box>
-                <RadioGroup
-                  aria-label="gender"
-                  name="gender1"
-                  value={
-                    answers[
-                      questionSelected.data && questionSelected.data.id
-                    ] || null
-                  }
-                  onChange={handleChangeAnswer}
-                >
-                  {questionSelected &&
-                    questionSelected.data &&
-                    questionSelected.data.answers
-                      .sort((a, b) => a.position - b.position)
-                      .map((el, index) => (
-                        <FormControlLabel
-                          key={index}
-                          value={el.answerId}
-                          control={<Radio />}
-                          label={el.content}
-                        />
-                      ))}
-                </RadioGroup>
+                {questionSelected &&
+                  questionSelected.data &&
+                  questionSelected.data.answers
+                    .sort((a, b) => a.position - b.position)
+                    .map((el, index) => (
+                      <Box
+                        style={{
+                          background: `${
+                            answers[questionSelected.data.id] === el.answerId
+                              ? '#81d1a2'
+                              : '#eceff0'
+                          }`,
+                          padding: '20px 20px',
+                          marginBottom: '10px',
+                          borderRadius: '10px',
+                          border: '1px solid #ccc',
+                        }}
+                        className={classes.answerRow}
+                        onClick={() => handleChangeAnswer(el.answerId)}
+                      >
+                        <Typography key={index}>
+                          {alphabet.split(' ')[index]}.{` ${el.content}`}
+                        </Typography>
+                      </Box>
+                    ))}
               </Box>
             </Paper>
           </Grid>
           <Grid item xs={4}>
             <Paper className={classes.questionBox}>
-              {contest &&
-                contest.questions.map((el, index) => (
-                  <Button
-                    key={index}
-                    className={classes.questionSquare}
-                    onClick={handleClickQuestion(index)}
-                  >
-                    {index + 1}
-                  </Button>
-                ))}
+              <Box mb={2}>
+                <Typography>Danh sách câu hỏi</Typography>
+              </Box>
+              <Box className={classes.listQuestionBox}>
+                {contest &&
+                  contest.questions.map((el, index) => (
+                    <Button
+                      key={index}
+                      className={classes.questionSquare}
+                      style={
+                        questionSelected && questionSelected.position === index
+                          ? {
+                              background: '#f6a61f',
+                              color: '#fff',
+                            }
+                          : answers[el.id] && {
+                              background: '#eceff0',
+                              border: '1px solid #ccc',
+                            }
+                      }
+                      onClick={handleClickQuestion(index)}
+                    >
+                      {index + 1}
+                    </Button>
+                  ))}
+              </Box>
             </Paper>
           </Grid>
         </Grid>
@@ -263,4 +288,4 @@ const PrepareExam = () => {
   );
 };
 
-export default PrepareExam;
+export default ExamTest;

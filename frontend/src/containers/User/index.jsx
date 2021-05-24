@@ -11,12 +11,12 @@ import ChangePassword from './ChangePassword';
 const menus = [
   {
     id: 0,
-    heading: 'User Information',
+    heading: 'Thông tin cá nhân',
     component: <UserInformation />,
   },
   {
     id: 1,
-    heading: 'Change Password',
+    heading: 'Thay đổi mật khẩu',
     component: <ChangePassword />,
   },
 ];

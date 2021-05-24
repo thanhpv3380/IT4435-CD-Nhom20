@@ -19,6 +19,7 @@ import Highcharts from 'highcharts';
 import useStyles from './index.style';
 import apis from '../../../apis';
 import LoadingPage from '../../../components/LoadingPage';
+import { renderClockTime } from '../../../utils/date';
 
 const ExamDetail = ({ examId, role, resultId }) => {
   const classes = useStyles();
@@ -68,7 +69,7 @@ const ExamDetail = ({ examId, role, resultId }) => {
         renderTo: 'graph-summary-contest',
       },
       title: {
-        text: 'Statistic Data',
+        text: 'Thống kê kết quả',
       },
       xAxis: {
         title: {
@@ -148,7 +149,7 @@ const ExamDetail = ({ examId, role, resultId }) => {
                 <TableCell align="center">No.</TableCell>
                 <TableCell>Tên</TableCell>
                 <TableCell align="center">Số câu đúng</TableCell>
-                <TableCell align="center">Thời gian</TableCell>
+                <TableCell align="center">Thời gian(m)</TableCell>
                 <TableCell align="center">Ngày</TableCell>
                 {role && <TableCell />}
               </TableRow>
@@ -173,7 +174,7 @@ const ExamDetail = ({ examId, role, resultId }) => {
                       {pagination.page * pagination.rowsPerPage + index + 1}
                     </TableCell>
                     <TableCell>
-                      <Box display="flex" alignItems="center">
+                      <Box display="flex" alignItems="center" mb={1}>
                         <Avatar
                           alt="avatar"
                           src={row.participant.avatar}
@@ -185,11 +186,14 @@ const ExamDetail = ({ examId, role, resultId }) => {
                         />
                         {row.participant.name}
                       </Box>
+                      <Box>{row.participant.email}</Box>
                     </TableCell>
                     <TableCell align="center">
                       {row.amountCorrectQuestion}
                     </TableCell>
-                    <TableCell align="center">{row.doTime}</TableCell>
+                    <TableCell align="center">
+                      {renderClockTime(row.doTime)}
+                    </TableCell>
                     <TableCell align="center">
                       {moment(row.createdAt).format('LLL')}
                     </TableCell>

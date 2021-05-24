@@ -95,7 +95,7 @@ const Login = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Đăng nhập
           </Typography>
           <form className={classes.form} noValidate>
             <TextField
@@ -123,7 +123,7 @@ const Login = () => {
               required
               fullWidth
               name="password"
-              label="Password"
+              label="Mật khẩu"
               type="password"
               id="password"
               autoComplete="current-password"
@@ -147,19 +147,19 @@ const Login = () => {
                 handleLogin();
               }}
             >
-              Sign In
+              Đăng nhập
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
                 <Link href="/register" variant="body2">
-                  Create account
+                  Tạo tài khoản
                 </Link>
               </Grid>
             </Grid>
             <Box display="flex" mt={1} alignItems="center">
               <div className={classes.divider} />
               <Typography gutterBottom align="center" variant="subtitle1">
-                Or login with
+                Hoặc
               </Typography>
               <div className={classes.divider} />
             </Box>
@@ -186,7 +186,7 @@ const Login = () => {
                       }
                       onClick={renderProps.onClick}
                     >
-                      Login By Google
+                      Google
                     </Button>
                   )}
                   buttonText="Login"
