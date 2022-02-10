@@ -52,10 +52,16 @@ export default function authReducer(state = initialState, action) {
     }
 
     case actionTypes.VERIFY_TOKEN_FAILURE:
-      return { ...state, verifying: false, status: 0 };
+      return {
+        ...state,
+        verifying: false,
+        status: 0,
+        user: null,
+        accessToken: null,
+      };
 
     case actionTypes.LOGOUT:
-      return { ...state, status: 0, accessToken: null };
+      return { ...state, status: 0, accessToken: null, user: null };
 
     case actionTypes.UPDATE_USER: {
       const { user } = action;

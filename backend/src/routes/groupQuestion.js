@@ -6,7 +6,7 @@ const groupQuestionController = require('../controllers/groupQuestion');
 router.get(
   '/groupQuestions',
   auth,
-  asyncMiddleware(groupQuestionController.getAllGroupQuestion),
+  asyncMiddleware(groupQuestionController.getAllGroupQuestionByUser),
 );
 router.get(
   '/groupQuestions/:id',

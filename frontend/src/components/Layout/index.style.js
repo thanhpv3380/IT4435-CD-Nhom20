@@ -39,6 +39,8 @@ export default makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    textTransform: 'uppercase',
+    marginLeft: 2,
   },
   drawerPaper: {
     position: 'relative',
@@ -82,5 +84,11 @@ export default makeStyles((theme) => ({
   link: {
     textDecoration: 'none',
     color: '#000',
+  },
+  avatar: {
+    marginLeft: theme.spacing(1),
+  },
+  listItem: {
+    background: '#eee',
   },
 }));

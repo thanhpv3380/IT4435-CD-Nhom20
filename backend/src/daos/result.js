@@ -10,6 +10,7 @@ const findAllResult = async ({
   fields,
   sort,
   populate,
+  exclude,
 }) => {
   const { data, metadata } = await findAll({
     model: Result,
@@ -21,6 +22,7 @@ const findAllResult = async ({
     fields,
     sort,
     populate,
+    exclude,
   });
   return {
     data,
@@ -35,17 +37,17 @@ const findResult = async (condition, fields, populate) => {
 
 const createResult = async ({
   participant,
-  score,
+  amountCorrectQuestion,
+  amountQuestion,
   history,
-  comment,
   doTime,
   contest,
 }) => {
   const result = await Result.create({
     participant,
-    score,
+    amountCorrectQuestion,
+    amountQuestion,
     history,
-    comment,
     doTime,
     contest,
   });

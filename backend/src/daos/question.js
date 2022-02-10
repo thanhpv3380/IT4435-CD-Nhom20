@@ -10,6 +10,7 @@ const findAllQuestion = async ({
   fields,
   sort,
   populate,
+  exclude,
 }) => {
   const { data, metadata } = await findAll({
     model: Question,
@@ -21,6 +22,7 @@ const findAllQuestion = async ({
     fields,
     sort,
     populate,
+    exclude,
   });
   return {
     data,
@@ -36,18 +38,16 @@ const findQuestion = async (condition, fields, populate) => {
 const createQuestion = async ({
   title,
   description,
-  explainAnswer,
+  explain,
   answers = [],
-  correctAnswer = 0,
   level,
   groupQuestion,
 }) => {
   const question = await Question.create({
     title,
     description,
-    explainAnswer,
+    explain,
     answers,
-    correctAnswer,
     level,
     groupQuestion,
   });

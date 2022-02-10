@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { COLOR } from '../../styles/color';
 
 export default makeStyles((theme) => ({
   textPrimary: {
@@ -19,5 +20,24 @@ export default makeStyles((theme) => ({
   },
   detail: {
     width: '100%',
+  },
+  actionBox: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  row: {
+    '&:hover': {
+      backgroundColor: '#eee',
+    },
+    cursor: 'pointer',
+  },
+  redStatus: {
+    color: COLOR.red['500'],
+  },
+  greenStatus: { color: COLOR.green['500'] },
+  yellowStatus: { color: COLOR.yellow['500'] },
+  input: {
+    display: 'none',
   },
 }));

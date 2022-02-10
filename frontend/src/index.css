@@ -5,7 +5,11 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Vbee', sans-serif;
+  font-family: 'Muli';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.highcharts-credits {
+  display: none;
 }

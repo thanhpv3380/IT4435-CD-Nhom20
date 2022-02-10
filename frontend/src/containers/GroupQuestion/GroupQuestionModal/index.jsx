@@ -40,7 +40,9 @@ const GroupQuestionModal = ({ handleCloseModal, open, item, handleSave }) => {
       <div className={classes.paper}>
         <Box mb={3}>
           <Typography variant="h6" gutterBottom>
-            {state ? 'Edit Group Question ' : 'Add Group Question'}
+            {state
+              ? 'Cập nhật thông tin bộ câu hỏi '
+              : 'Thêm thông tin bộ câu hỏi'}
           </Typography>
         </Box>
         <Box mb={2}>
@@ -48,7 +50,7 @@ const GroupQuestionModal = ({ handleCloseModal, open, item, handleSave }) => {
             fullWidth
             variant="outlined"
             size="large"
-            placeholder="Enter title"
+            placeholder="Nhập tiêu đề"
             name="title"
             value={(groupQuestion && groupQuestion.title) || ''}
             onChange={handleChange}
@@ -59,7 +61,7 @@ const GroupQuestionModal = ({ handleCloseModal, open, item, handleSave }) => {
             fullWidth
             variant="outlined"
             size="large"
-            placeholder="Enter description"
+            placeholder="Nhập mô tả chi tiết"
             name="description"
             value={(groupQuestion && groupQuestion.description) || ''}
             onChange={handleChange}
@@ -73,12 +75,12 @@ const GroupQuestionModal = ({ handleCloseModal, open, item, handleSave }) => {
               size="large"
               onClick={handleSave(groupQuestion)}
             >
-              Save
+              Lưu
             </Button>
           </Box>
           <Box>
             <Button variant="contained" size="large" onClick={handleCloseModal}>
-              Cancel
+              Hủy bỏ
             </Button>
           </Box>
         </Box>

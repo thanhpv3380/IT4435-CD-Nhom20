@@ -4,6 +4,9 @@ export default makeStyles((theme) => ({
   appBar: {
     position: 'relative',
   },
+  tab: {
+    marginBottom: theme.spacing(2),
+  },
   paper: {
     marginBottom: theme.spacing(3),
     padding: theme.spacing(6),

@@ -22,6 +22,7 @@ function* loginSaga(data) {
         const { email, password } = data;
         res = yield apis.auth.login(email, password);
     }
+
     if (res.status) {
       const { accessToken, user } = res.result;
       setCookie('accessToken', accessToken, A_WEEK);
@@ -40,7 +41,11 @@ function* verifyTokenSaga({ accessToken }) {
     const data = yield apis.auth.verify(accessToken);
     if (!data.status) throw new Error();
     const { user } = data.result;
-    yield put(actions.auth.verifyTokenSuccess(accessToken, user));
+    if (user) {
+      yield put(actions.auth.verifyTokenSuccess(accessToken, user));
+    } else {
+      yield put(actions.auth.verifyTokenFailure());
+    }
   } catch (error) {
     yield put(actions.auth.verifyTokenFailure());
   }

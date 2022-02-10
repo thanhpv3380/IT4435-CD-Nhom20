@@ -5,6 +5,8 @@ import User from '../pages/User';
 import Contest from '../pages/Contest';
 import GroupQuestion from '../pages/GroupQuestion';
 import Question from '../pages/Question';
+import ExamTest from '../pages/ExamTest';
+import ExamDetail from '../pages/ExamDetail';
 import routes from '../constants/route';
 
 export default [
@@ -53,6 +55,20 @@ export default [
   {
     path: routes.QUESTION,
     component: Question,
+    exact: true,
+    restricted: false,
+    isPrivate: true,
+  },
+  {
+    path: routes.EXAM_TEST,
+    component: ExamTest,
+    exact: true,
+    restricted: false,
+    isPrivate: true,
+  },
+  {
+    path: routes.EXAM_DETAIL,
+    component: ExamDetail,
     exact: true,
     restricted: false,
     isPrivate: true,

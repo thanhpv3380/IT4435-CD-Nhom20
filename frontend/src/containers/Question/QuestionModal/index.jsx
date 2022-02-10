@@ -2,6 +2,8 @@
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable react/no-array-index-key */
 import React, { useState, useEffect } from 'react';
+import { useSnackbar } from 'notistack';
+import mongoid from 'mongoid-js';
 import {
   Modal,
   TextField,
@@ -25,15 +27,28 @@ import { Remove as RemoveIcon, Add as AddIcon } from '@material-ui/icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import LevelsQuestion from '../../../data/levelsQuestion';
 import useStyles from './index.style';
+import apis from '../../../apis';
 
-const QuestionModal = ({ handleCloseModal, open }) => {
+const QuestionModal = ({
+  handleCloseModal,
+  open,
+  itemSelect,
+  handleUpdateQuestion,
+  groupQuestionId,
+}) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [question, setQuestion] = useState();
   useEffect(() => {}, [open]);
+
+  useEffect(() => {
+    setQuestion(itemSelect);
+  }, [itemSelect, open]);
 
   const handleAddAnswer = (e) => {
     e.preventDefault();
     const answerData = {
+      answerId: mongoid(),
       position: (question && question.answers && question.answers.length) || 0,
       content: '',
       isCorrect: false,
@@ -75,9 +90,57 @@ const QuestionModal = ({ handleCloseModal, open }) => {
     });
   };
 
-  const handleSave = (e) => {
+  const validateQuestion = (item) => {
+    if (item.description.trim().length <= 0) {
+      enqueueSnackbar('Description is not empty', {
+        variant: 'error',
+      });
+      return false;
+    }
+    if (item.answers.length < 2) {
+      enqueueSnackbar('Must have at least 2 answers', {
+        variant: 'error',
+      });
+      return false;
+    }
+    const questionCorrect = item.answers.find((el) => el.isCorrect);
+    if (!questionCorrect) {
+      enqueueSnackbar('You have not chosen the correct answer', {
+        variant: 'error',
+      });
+      return false;
+    }
+    return true;
+  };
+  const handleSave = async (e) => {
     e.preventDefault();
-    console.log(question);
+    let data = null;
+    if (!validateQuestion(question)) return;
+    if (itemSelect && itemSelect.id) {
+      data = await apis.question.updateQuestion(itemSelect.id, {
+        ...question,
+        level: question.level || 'EASY',
+        groupQuestion: groupQuestionId,
+      });
+    } else {
+      data = await apis.question.createQuestion({
+        ...question,
+        level: question.level || 'EASY',
+        groupQuestion: groupQuestionId,
+      });
+    }
+    if (data && data.status) {
+      const { question: newQuestion } = data.result;
+      const type = itemSelect && itemSelect.id ? 'UPDATE' : 'ADD';
+      handleUpdateQuestion(newQuestion, type);
+      enqueueSnackbar('Save data success', {
+        variant: 'success',
+      });
+    } else {
+      enqueueSnackbar((data && data.message) || 'Save data failed', {
+        variant: 'error',
+      });
+    }
   };
 
   const handleChooseCorrectAnswer = (pos) => () => {
@@ -133,15 +196,15 @@ const QuestionModal = ({ handleCloseModal, open }) => {
       <div className={classes.paper}>
         <Box mb={3}>
           <Typography variant="h6" gutterBottom>
-            Add Question
+            Thông tin câu hỏi
           </Typography>
         </Box>
         <Box mb={2}>
           <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel>Level Question</InputLabel>
+            <InputLabel>Cấp độ câu hỏi</InputLabel>
             <Select
               name="level"
-              label="Level Question"
+              label="Cấp độ câu hỏi"
               value={(question && question.level) || 'EASY'}
               onChange={handleChange}
             >
@@ -156,7 +219,7 @@ const QuestionModal = ({ handleCloseModal, open }) => {
         <Box mb={2}>
           <TextField
             fullWidth
-            label="Title"
+            label="Tiêu đề câu hỏi"
             variant="outlined"
             name="title"
             value={(question && question.title) || ''}
@@ -166,7 +229,7 @@ const QuestionModal = ({ handleCloseModal, open }) => {
         <Box mb={2}>
           <TextField
             fullWidth
-            label="Description"
+            label="Nội dung câu hỏi"
             variant="outlined"
             multiline
             rows={10}
@@ -180,7 +243,7 @@ const QuestionModal = ({ handleCloseModal, open }) => {
             {/* <QuestionAnswerIcon /> */}
 
             <Typography variant="h6" className={classes.textCreateAnswer}>
-              List Answer
+              Danh sách đáp án
             </Typography>
           </Box>
           <Box>
@@ -251,14 +314,14 @@ const QuestionModal = ({ handleCloseModal, open }) => {
               startIcon={<AddIcon />}
               onClick={handleAddAnswer}
             >
-              Add
+              Thêm
             </Button>
           </Box>
         </Box>
         <Box mb={2}>
           <TextField
             fullWidth
-            label="Explain"
+            label="Giải thích đáp án"
             variant="outlined"
             multiline
             rows={5}
@@ -275,12 +338,12 @@ const QuestionModal = ({ handleCloseModal, open }) => {
               size="large"
               onClick={handleSave}
             >
-              Save
+              Lưu
             </Button>
           </Box>
           <Box>
             <Button variant="contained" size="large" onClick={handleCloseModal}>
-              Cancel
+              Hủy bỏ
             </Button>
           </Box>
         </Box>

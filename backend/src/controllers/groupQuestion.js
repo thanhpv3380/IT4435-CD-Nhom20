@@ -1,6 +1,6 @@
 const groupQuestionService = require('../services/groupQuestion');
 
-const getAllGroupQuestion = async (req, res) => {
+const getAllGroupQuestionByUser = async (req, res) => {
   const { key } = req.query;
   const { user } = req;
   const {
@@ -54,7 +54,7 @@ const deleteGroupQuestion = async (req, res) => {
 };
 
 module.exports = {
-  getAllGroupQuestion,
+  getAllGroupQuestionByUser,
   getGroupQuestion,
   createGroupQuestion,
   updateGroupQuestion,
